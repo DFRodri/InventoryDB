@@ -1,0 +1,8 @@
+<resources>
+    <!-- APP NAME -->
+    <string name="app_name">Book DB</string>
+
+    <!-- New Entry -->
+    <string name="newEntry">New Entry</string>
+    <string name="dummyData">Insert Dummy Data</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/BaseMatchStyle"
+    tools:context=".MainActivity">
+
+    <!-- DB info to be displayed; for now is just to be sure that the data works flawless -->
+    <TextView
+        android:id="@+id/inventory"
+        style="@style/BaseWrapStyle" />
+
+</RelativeLayout>

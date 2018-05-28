@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Button to add dummy data -->
+    <item
+        android:id="@+id/newBook"
+        android:icon="@drawable/ic_more_vert_white_24dp"
+        android:title="@string/newEntry"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/dummyEntry"
+                android:title="@string/dummyData"
+                app:showAsAction="ifRoom"/>
+        </menu>
+    </item>
+
+</menu>
