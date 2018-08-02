@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Generic Values -->
+    <dimen name="marginGeneral">16dp</dimen>
+    <dimen name="paddingGeneral">16dp</dimen>
+
+    <!-- Display/Edit Data -->
+    <dimen name="marginDisplayEditData">8dp</dimen>
+</resources>

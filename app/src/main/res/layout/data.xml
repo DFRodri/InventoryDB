@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/BaseWrapStyle"
+    android:layout_gravity="center"
+    android:baselineAligned="false">
+
+    <!-- Display Data -->
+    <LinearLayout
+        style="@style/BaseMatchAndWrapStyle"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/title" />
+
+        <TextView
+            android:id="@+id/bookTitle"
+            style="@style/ItemEdit"
+            tools:text="@string/testTitle" />
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/price" />
+
+        <TextView
+            android:id="@+id/bookPrice"
+            style="@style/ItemEdit"
+            tools:text="@string/testPrice" />
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/quantity" />
+
+        <TextView
+            android:id="@+id/bookQuantity"
+            style="@style/ItemEdit"
+            tools:text="@string/testQuantity2" />
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/supplierName" />
+
+        <TextView
+            android:id="@+id/bookSupplier"
+            style="@style/ItemEdit"
+            tools:text="@string/testSupplierName" />
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/supplierPhone" />
+
+        <TextView
+            android:id="@+id/bookSupplierPhone"
+            style="@style/ItemEdit"
+            tools:text="@string/testSupplierPhone" />
+
+    </LinearLayout>
+
+
+    <!-- Edit Data -->
+    <LinearLayout
+        style="@style/BaseMatchAndWrapStyle"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/title" />
+
+        <EditText
+            android:id="@+id/insertBookTitle"
+            style="@style/ItemEdit"
+            android:hint="@string/insertTitle"
+            android:inputType="text" />
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/price" />
+
+        <EditText
+            android:id="@+id/insertBookPrice"
+            style="@style/ItemEdit"
+            android:hint="@string/insertPrice"
+            android:inputType="number" />
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/quantity" />
+
+        <EditText
+            android:id="@+id/insertBookQuantity"
+            style="@style/ItemEdit"
+            android:hint="@string/insertQuantity"
+            android:inputType="number" />
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/supplierName" />
+
+        <EditText
+            android:id="@+id/insertBookSupplierName"
+            style="@style/ItemEdit"
+            android:hint="@string/insertSupplierName"
+            android:inputType="text" />
+
+        <TextView
+            style="@style/ItemTag"
+            android:text="@string/supplierPhone" />
+
+        <EditText
+            android:id="@+id/insertBookSupplierPhone"
+            style="@style/ItemEdit"
+            android:hint="@string/insertSupplierPhone"
+            android:inputType="phone" />
+
+    </LinearLayout>
+
+</RelativeLayout>

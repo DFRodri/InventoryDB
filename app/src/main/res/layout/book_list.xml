@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/BaseMatchAndWrapStyle">
+
+    <TextView
+        android:id="@+id/bookSale"
+        style="@style/BaseWrapStyle"
+        android:drawableBottom="@drawable/ic_keyboard_arrow_down_black_24dp"
+        android:padding="@dimen/paddingGeneral"
+        android:text="@string/saleTag"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/bookTitle"
+        style="@style/BaseWrapStyle"
+        android:layout_marginTop="@dimen/marginGeneral"
+        android:layout_toEndOf="@id/bookSale"
+        android:layout_toRightOf="@id/bookSale"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="@string/testTitle" />
+
+    <TextView
+        android:id="@+id/bookQuantity"
+        style="@style/BaseWrapStyle"
+        android:layout_alignLeft="@id/bookTitle"
+        android:layout_alignStart="@id/bookTitle"
+        android:layout_below="@id/bookTitle"
+        android:layout_marginBottom="@dimen/marginGeneral"
+        tools:text="@string/testQuantity" />
+
+    <TextView
+        android:id="@+id/bookPrice"
+        style="@style/BaseWrapStyle"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/bookTitle"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        android:layout_marginRight="@dimen/marginGeneral"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="@string/testPrice" />
+
+</RelativeLayout>

@@ -9,6 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name=".data.BookProvider"
+            android:authorities="com.example.android.bookdb"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

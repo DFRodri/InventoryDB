@@ -29,4 +29,22 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <!-- Edit/Insert Data -->
+
+    <style name="InsertAndDeleteData" parent="BaseMatchAndWrapStyle">
+        <item name="android:paddingLeft">@dimen/paddingGeneral</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="ItemTag" parent="InsertAndDeleteData">
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Small</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ItemEdit" parent="InsertAndDeleteData">
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Medium</item>
+        <item name="android:layout_marginLeft">@dimen/marginDisplayEditData</item>
+        <item name="android:layout_marginBottom">@dimen/marginGeneral</item>
+    </style>
+
 </resources>

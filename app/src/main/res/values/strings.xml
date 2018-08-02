@@ -5,4 +5,55 @@
     <!-- New Entry -->
     <string name="newEntry">New Entry</string>
     <string name="dummyData">Insert Dummy Data</string>
+
+    <!-- Recycler View -->
+    <string name="saleTag">Sale</string>
+
+    <!-- Fragments -->
+    <string name="title">Title:</string>
+    <string name="price">Price:</string>
+    <string name="quantity">Available:</string>
+    <string name="supplierName">Supplier:</string>
+    <string name="supplierPhone">Phone:</string>
+
+    <!-- Insert Data Hints -->
+    <string name="insertTitle">Title of the book</string>
+    <string name="insertPrice">Price of each book</string>
+    <string name="insertQuantity">Number of books available</string>
+    <string name="insertSupplierName">Supplier\'s name</string>
+    <string name="insertSupplierPhone">Supplier\'s phone</string>
+
+    <!-- Others -->
+    <string name="euroSymbol">€</string>
+
+    <!-- Warning Toasts -->
+    <string name="missingTitle">Books have titles, please add one.</string>
+    <string name="missingPrice">Is this book free? If so, at least add a zero to its price.</string>
+    <string name="missingQuantity">Where are the books?</string>
+
+    <!-- Error Strings -->
+    <string name="insertionError">Can\'t insert data</string>
+    <string name="unknownURI">Unknown URI </string>
+    <string name="unknownMatchCode">Match code </string>
+
+    <string name="unknownName">Every book needs a name!</string>
+    <string name="unknownQuantity">You can only have positive quantities.</string>
+    <string name="unknownPrice">Every book needs to have a price.</string>
+    <string name="unknownSupplier">Every book needs to have a supplier.</string>
+    <string name="unknownSupplierPhone">Every book needs to have a supplier with a contact.</string>
+
+    <string name="insertDataFailed">Failed to insert new row </string>
+    <string name="deleteDataFailed">Failed to delete data </string>
+    <string name="updateDatabaseFailed">Contents are null </string>
+    <string name="updateFailed">Update Failed, uri number unknown </string>
+
+    <!-- Test Strings -->
+    <string name="testTitle">This is a test title</string>
+    <string name="testQuantity">Available: 3232131</string>
+    <string name="testPrice">109.99€</string>
+
+    <string name="testQuantity2">345</string>
+    <string name="testSupplierName">Grandma\'s Corner</string>
+    <string name="testSupplierPhone">000-000-000</string>
+
 </resources>
