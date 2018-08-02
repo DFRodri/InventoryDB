@@ -3,8 +3,14 @@
     <string name="app_name">Book DB</string>
 
     <!-- New Entry -->
-    <string name="newEntry">New Entry</string>
+    <string name="newEntry">New Book</string>
     <string name="dummyData">Insert Dummy Data</string>
+    <string name="editEntry">Edit Book Info</string>
+    <string name="deleteEntry">Delete Book Info</string>
+
+    <!-- Menu Titles -->
+    <string name="detailsMenu">Details</string>
+    <string name="editMenu">Edit</string>
 
     <!-- Recycler View -->
     <string name="saleTag">Sale</string>

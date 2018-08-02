@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.android.bookdb.R;
 
@@ -17,7 +18,8 @@ import butterknife.BindView;
 public class DetailsData extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     //bind views
-    private @BindView(R.id.bookName) bookName;
+    private @BindView(R.id.bookTitle)
+    TextView bookName;
 
     @Nullable
     @Override
