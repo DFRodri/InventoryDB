@@ -1,9 +1,15 @@
 package com.example.android.bookdb;
 
-import android.app.FragmentManager;
+import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,14 +25,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.bookdb.adapter.BookAdapter;
-import com.example.android.bookdb.custom_class.Book;
 import com.example.android.bookdb.data.BookContract.BookEntry;
 import com.example.android.bookdb.data.BookDBHelper;
+import com.example.android.bookdb.fragment.Credits;
 import com.example.android.bookdb.fragment.EditData;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private BookDBHelper dbHelper = new BookDBHelper(this);
 
     //global variables
+    Context context;
+
     private String book;
     private String price;
     private String quantity;
@@ -45,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private Uri currentBook;
 
     private static final int INVENTORY_LOADER = 0;
-
-    private
 
     private RecyclerView.Adapter bookListAdapter;
     private RecyclerView.LayoutManager bookListLayoutManager;
@@ -70,25 +75,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         ButterKnife.bind(this);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        EditData editData = new EditData();
-
         bookListLayoutManager = new LinearLayoutManager(this);
         bookListRecyclerView.setLayoutManager(bookListLayoutManager);
 
         getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
 
-        bookListRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        bookListRecyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
 
-        bookListAdapter = new BookAdapter(this, new ArrayList<Book>());
+        bookListAdapter = new BookAdapter(this, null);
         bookListRecyclerView.setAdapter(bookListAdapter);
 
         addBookFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO - go to fragment "add new book"
+                Intent intent = new Intent(MainActivity.this, EditData.class);
+                startActivity(intent);
             }
-
         });
     }
 
@@ -115,55 +118,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         database.insert(BookEntry.TABLE_NAME, null, contentValues);
     }
 
-    //method to read our db
-    /**private void readBook() {
-        //call the repository in read mode
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
-
-        //defines the columns we want from our db (projection)
-        String[] projection = {
-                BookEntry._ID,
-                BookEntry.COLUMN_PRODUCT_NAME,
-                BookEntry.COLUMN_PRICE,
-                BookEntry.COLUMN_QUANTITY,
-                BookEntry.COLUMN_SUPPLIER_NAME,
-                BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER
-        };
-
-        //attempt to read the data of the db if there is any and display it in our text view
-        try {
-            //TextView textView = findViewById(R.id.inventory);
-            //textView.setText(null);
-
-            int idColumnIndex = cursor.getColumnIndex(BookEntry._ID);
-            int productNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
-            int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_QUANTITY);
-            int supplierNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_NAME);
-            int supplierPhoneColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
-
-            while (cursor.moveToNext()) {
-                int idValue = cursor.getInt(idColumnIndex);
-                String nameValue = cursor.getString(productNameColumnIndex);
-                float priceValue = cursor.getFloat(priceColumnIndex);//XX.YY (e.g.:12.99€) prices exist
-                int quantityValue = cursor.getInt(quantityColumnIndex);
-                String supplierNameValue = cursor.getString(supplierNameColumnIndex);
-                String supplierPhoneValue = cursor.getString(supplierPhoneColumnIndex);
-
-                textView.append(idValue + " | "
-                        + nameValue + " | "
-                        + priceValue + "€" + " | "
-                        + quantityValue + " | "
-                        + supplierNameValue + " | "
-                        + supplierPhoneValue + "\n");
-            }
-        } finally {
-            //close the cursor to prevent memory leaks
-            cursor.close();
-        }
-
-    }**/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -174,21 +128,37 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.dummyEntry:
-                //add dummy data
-                book = dummyData[0];
-                price = dummyData[1];
-                quantity = dummyData[2];
-                supplierName = dummyData[3];
-                supplierPhone = dummyData[4];
+            case R.id.removeALL:
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage(R.string.warning);
+                alertDialogBuilder.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
+                        Toast.makeText(context, R.string.dbCleaned, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                alertDialogBuilder.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                break;
+            case R.id.credits:
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("credits");
+                if (prev != null) {
+                    fragmentTransaction.remove(prev);
+                }
+                fragmentTransaction.addToBackStack(null);
 
-                //call the method to add the data to the db
-                insertBook();
+                DialogFragment creditsFragment = new Credits();
+                creditsFragment.show(fragmentTransaction, "credits");
+                break;
 
-                //read the db and display it
-                readBook();
-
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -214,13 +184,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (cursor.moveToFirst()){
-
-        }
+        //TODO - Something missing here??
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        bookListAdapter.notifyDataSetChanged();
     }
 }

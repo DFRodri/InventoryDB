@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.bookdb.R;
 
@@ -21,15 +23,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.example.android.bookdb.data.BookContract.BookEntry;
+import com.example.android.bookdb.fragment.DetailsData;
+
+import javax.security.auth.Subject;
 
 import static android.content.ContentValues.TAG;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
-    /**
-     * private @BindView(R.id.bookList)
-     * RecyclerView bookList;
-     **/
     private @BindView(R.id.bookTitle)
     TextView bookTitle;
     private @BindView(R.id.bookPrice)
@@ -101,8 +102,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-
-
     }
 
     @NonNull
@@ -114,9 +113,23 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         cursorAdapter.getCursor().moveToPosition(position);
         cursorAdapter.bindView(holder.itemView, context, cursorAdapter.getCursor());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int adapterPosition = holder.getAdapterPosition();
+                Intent intent = new Intent(context, DetailsData.class);
+                Uri currentBook = ContentUris.withAppendedId(BookEntry.CONTENT_URI, adapterPosition);
+                intent.setData(currentBook);
+                if (currentBook != null) {
+                    context.startActivity(intent);
+                }else{
+                    Toast.makeText(context, R.string.emptyBook, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override

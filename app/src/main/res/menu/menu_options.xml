@@ -2,22 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Button to add dummy data -->
+    <!-- Menu with Options -->
     <item
         android:id="@+id/newBook"
         android:icon="@drawable/ic_more_vert_white_24dp"
-        android:title="@string/newEntry"
-        app:showAsAction="always">
+        android:title="@string/app_name"
+        app:showAsAction="ifRoom">
         <menu>
+            <!-- Clean DB to start over from zero -->
             <item
-                android:id="@+id/addNewEntry"
-                android:title="@string/newEntry"
-                app:showAsAction="ifRoom"
+                android:id="@+id/removeALL"
+                android:title="@string/removeAll"
+                app:showAsAction="always"
                 />
+            <!-- Credits -->
             <item
-                android:id="@+id/dummyEntry"
-                android:title="@string/dummyData"
-                app:showAsAction="ifRoom"/>
+                android:id="@+id/credits"
+                android:title="@string/credits"
+                app:showAsAction="always"/>
         </menu>
     </item>
 

@@ -2,9 +2,31 @@
     <!-- APP NAME -->
     <string name="app_name">Book DB</string>
 
-    <!-- New Entry -->
-    <string name="newEntry">New Book</string>
-    <string name="dummyData">Insert Dummy Data</string>
+    <!-- Credits -->
+    <string name="urlName0">Stack Overflow - Alert Dialog </string>
+    <string name="url0">https://stackoverflow.com/questions/15762905/how-can-i-display-a-list-view-in-an-android-alert-dialog</string>
+    <string name="urlName1">Tutorials Point - Alert Dialog</string>
+    <string name="url1">https://www.tutorialspoint.com/android/android_alert_dialoges.htm</string>
+    <string name="urlName2">CODEPATH - FAB</string>
+    <string name="url2">https://guides.codepath.com/android/floating-action-buttons</string>
+    <string name="urlName3">Stack Overflow - Fragments with Recycler View</string>
+    <string name="url3">https://stackoverflow.com/questions/40232429/open-fragment-onclick-on-recyclerview-item-from-api</string>
+    <string name="urlName4">Stack Overflow - Empty View with Recycler View</string>
+    <string name="url4">https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview</string>
+    <string name="urlName5">Stack Overflow - Recycler View with a Database</string>
+    <string name="url5">https://stackoverflow.com/questions/26517855/using-the-recyclerview-with-a-database</string>
+    <string name="urlName6">Xabaras - Dialog Fragments</string>
+    <string name="url6">https://medium.com/@xabaras/creating-a-custom-dialog-with-dialogfragment-f0198dab656d</string>
+    <string name="urlName7">Stack Overflow - Recycler View Touch Events</string>
+    <string name="url7">https://stackoverflow.com/questions/39637743/recyclerview-touch-events</string>
+    <string name="urlName8">Stack Overflow - getIntent() from a Fragment</string>
+    <string name="url8">https://stackoverflow.com/questions/26939759/android-getintent-from-a-fragment</string>
+    <string name="urlName9">Android Developer - Decimal Format</string>
+    <string name="url9">https://developer.android.com/reference/java/text/DecimalFormat</string>
+
+    <!-- Menu Options -->
+    <string name="removeAll">Remove All</string>
+    <string name="credits">Credits</string>
     <string name="editEntry">Edit Book Info</string>
     <string name="deleteEntry">Delete Book Info</string>
 
@@ -15,6 +37,13 @@
     <!-- Recycler View -->
     <string name="saleTag">Sale</string>
 
+    <!-- Alert Dialog -->
+
+    <string name="warning">Are you sure you want to REMOVE EVERY SINGLE ENTRY from the database?</string>
+    <string name="Yes">Yes, I\'m sure!</string>
+    <string name="No">No, cancel.</string>
+    <string name="dbCleaned">All entries were removed. Have a nice day!</string>
+
     <!-- Fragments -->
     <string name="title">Title:</string>
     <string name="price">Price:</string>
@@ -23,9 +52,10 @@
     <string name="supplierPhone">Phone:</string>
 
     <!-- Insert Data Hints -->
+    <string name="instructionsMain">Please fill the info:</string>
     <string name="insertTitle">Title of the book</string>
     <string name="insertPrice">Price of each book</string>
-    <string name="insertQuantity">Number of books available</string>
+    <string name="insertQuantity">Books available</string>
     <string name="insertSupplierName">Supplier\'s name</string>
     <string name="insertSupplierPhone">Supplier\'s phone</string>
 
@@ -38,9 +68,16 @@
     <string name="missingQuantity">Where are the books?</string>
 
     <!-- Error Strings -->
+
+    <string name="appNotFound">Can\'t open website, no app available.</string>
+
     <string name="insertionError">Can\'t insert data</string>
     <string name="unknownURI">Unknown URI </string>
     <string name="unknownMatchCode">Match code </string>
+
+    <string name="invalidPosition">Invalid Position: </string>
+
+    <string name="emptyBook">Error, contents are null.</string>
 
     <string name="unknownName">Every book needs a name!</string>
     <string name="unknownQuantity">You can only have positive quantities.</string>
@@ -60,6 +97,6 @@
 
     <string name="testQuantity2">345</string>
     <string name="testSupplierName">Grandma\'s Corner</string>
-    <string name="testSupplierPhone">000-000-000</string>
+    <string name="testSupplierPhone">000&#8211;000&#8211;000</string>
 
 </resources>

@@ -46,5 +46,5 @@
         <item name="android:layout_marginLeft">@dimen/marginDisplayEditData</item>
         <item name="android:layout_marginBottom">@dimen/marginGeneral</item>
     </style>
-
+    
 </resources>

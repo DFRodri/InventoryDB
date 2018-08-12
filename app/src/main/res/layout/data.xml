@@ -7,6 +7,7 @@
 
     <!-- Display Data -->
     <LinearLayout
+        android:id="@+id/displayData"
         style="@style/BaseMatchAndWrapStyle"
         android:orientation="vertical">
 
@@ -60,6 +61,7 @@
 
     <!-- Edit Data -->
     <LinearLayout
+        android:id="@+id/editData"
         style="@style/BaseMatchAndWrapStyle"
         android:orientation="vertical"
         android:visibility="gone">
