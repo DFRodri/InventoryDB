@@ -5,14 +5,12 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.LoaderManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +21,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,13 +44,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //global variables
     Context context;
 
-    private String book;
-    private String price;
-    private String quantity;
-    private String supplierName;
-    private String supplierPhone;
-
     private Uri currentBook;
+
+    private CursorAdapter bookAdapter;
 
     private static final int INVENTORY_LOADER = 0;
 
@@ -57,16 +54,35 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private RecyclerView.LayoutManager bookListLayoutManager;
 
     //bind views with butterknife
-    @BindView(R.id.bookList)
+    private @BindView(R.id.bookList)
     RecyclerView bookListRecyclerView;
 
-    @BindView(R.id.fab)
+    private @BindView(R.id.fab)
     FloatingActionButton addBookFAB;
 
-    @BindView(R.id.emptyView)
+    private @BindView(R.id.emptyView)
     TextView emptyStateTextView;
 
-    private String[] dummyData = {"Book One", "12.99", "2", "Dude With Books", "123123123"};
+    private @BindView(R.id.insertBookTitle)
+    EditText bookEditTitle;
+    private @BindView(R.id.insertBookPrice)
+    EditText bookEditPrice;
+    private @BindView(R.id.insertBookQuantity)
+    EditText bookEditQuantity;
+    private @BindView(R.id.insertBookSupplierName)
+    EditText bookEditSupplier;
+    private @BindView(R.id.insertBookSupplierPhone)
+    EditText bookEditPhoneSupplier;
+
+    private boolean bookHasChanged = false;
+
+    private View.OnTouchListener touchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            bookHasChanged = true;
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +109,48 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
+
+        bookEditTitle.setOnTouchListener(touchListener);
+        bookEditPrice.setOnTouchListener(touchListener);
+        bookEditQuantity.setOnTouchListener(touchListener);
+        bookEditSupplier.setOnTouchListener(touchListener);
+        bookEditPhoneSupplier.setOnTouchListener(touchListener);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            super.onBackPressed();
+            return;
+        } else {
+            getFragmentManager().popBackStack();
+        }
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                };
+
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(R.string.warningDiscardInfo);
+        alertDialogBuilder.setPositiveButton(R.string.yes, discardButtonClickListener);
+        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -101,7 +159,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onDestroy();
     }
 
-    //method to add a book to our db
+    /**method to add a book to our db
+    //TODO - check if this is still needed now (may be needed for quick tests)
     private void insertBook() {
         //call the repository in write mode
         SQLiteDatabase database = dbHelper.getWritableDatabase();
@@ -116,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //add the data inserted
         database.insert(BookEntry.TABLE_NAME, null, contentValues);
-    }
+    }**/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -130,15 +189,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (item.getItemId()) {
             case R.id.removeALL:
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-                alertDialogBuilder.setMessage(R.string.warning);
-                alertDialogBuilder.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setMessage(R.string.warningRemoveAll);
+                alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
                         Toast.makeText(context, R.string.dbCleaned, Toast.LENGTH_SHORT).show();
                     }
                 });
-                alertDialogBuilder.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -184,11 +243,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        //TODO - Something missing here??
+        bookAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        bookListAdapter.notifyDataSetChanged();
+        bookAdapter.swapCursor(null);
     }
 }

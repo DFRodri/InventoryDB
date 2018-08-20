@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/BaseWrapStyle"
     android:layout_gravity="center"
     android:baselineAligned="false">
+
+    <!-- Edit Book Info FAB -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabEdit"
+        style="@style/BaseWrapStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/marginGeneral"
+        app:srcCompat="@drawable/ic_edit_white_24dp" />
+
+    <!-- Save Book Info FAB -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabSave"
+        style="@style/BaseWrapStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/marginGeneral"
+        app:srcCompat="@drawable/ic_done_white_24dp" />
 
     <!-- Display Data -->
     <LinearLayout

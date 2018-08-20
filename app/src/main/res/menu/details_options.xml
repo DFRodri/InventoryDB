@@ -10,11 +10,6 @@
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/editEntry"
-                android:title="@string/editEntry"
-                app:showAsAction="ifRoom"
-                />
-            <item
                 android:id="@+id/deleteEntry"
                 android:title="@string/deleteEntry"
                 app:showAsAction="ifRoom"/>

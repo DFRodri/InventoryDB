@@ -25,8 +25,6 @@ import butterknife.ButterKnife;
 import com.example.android.bookdb.data.BookContract.BookEntry;
 import com.example.android.bookdb.fragment.DetailsData;
 
-import javax.security.auth.Subject;
-
 import static android.content.ContentValues.TAG;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
@@ -125,7 +123,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
                 intent.setData(currentBook);
                 if (currentBook != null) {
                     context.startActivity(intent);
-                }else{
+                } else {
                     Toast.makeText(context, R.string.emptyBook, Toast.LENGTH_SHORT).show();
                 }
             }

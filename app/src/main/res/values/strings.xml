@@ -23,26 +23,35 @@
     <string name="url8">https://stackoverflow.com/questions/26939759/android-getintent-from-a-fragment</string>
     <string name="urlName9">Android Developer - Decimal Format</string>
     <string name="url9">https://developer.android.com/reference/java/text/DecimalFormat</string>
+    <string name="urlName10">Stack Overflow - Fragments and OnCreateOptionsMenu</string>
+    <string name="url10">https://stackoverflow.com/questions/40425821/fragments-oncreateoptionsmenu-method-is-never-called</string>
+    <string name="urlName11">Stack Overflow - Fragment Handle Back Button Press</string>
+    <string name="url11">https://stackoverflow.com/questions/7992216/android-fragment-handle-back-button-press</string>
 
     <!-- Menu Options -->
     <string name="removeAll">Remove All</string>
     <string name="credits">Credits</string>
     <string name="editEntry">Edit Book Info</string>
     <string name="deleteEntry">Delete Book Info</string>
+    <string name="removeEntry">Remove Entry</string>
 
     <!-- Menu Titles -->
     <string name="detailsMenu">Details</string>
-    <string name="editMenu">Edit</string>
+    <string name="addMenu">Add Book</string>
+    <string name="editMenu">Edit Book</string>
 
     <!-- Recycler View -->
     <string name="saleTag">Sale</string>
 
     <!-- Alert Dialog -->
 
-    <string name="warning">Are you sure you want to REMOVE EVERY SINGLE ENTRY from the database?</string>
-    <string name="Yes">Yes, I\'m sure!</string>
-    <string name="No">No, cancel.</string>
+    <string name="warningRemoveAll">Are you sure you want to REMOVE EVERY SINGLE ENTRY from the database?</string>
+    <string name="warningSingleEntry">Are you sure you want to REMOVE THIS SINGLE ENTRY from the database?</string>
+    <string name="warningDiscardInfo">Are you sure you want to DISCARD the changes made?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No, cancel.</string>
     <string name="dbCleaned">All entries were removed. Have a nice day!</string>
+    <string name="entryCleaned">Entry removed. Have a nice day!</string>
 
     <!-- Fragments -->
     <string name="title">Title:</string>
@@ -66,6 +75,13 @@
     <string name="missingTitle">Books have titles, please add one.</string>
     <string name="missingPrice">Is this book free? If so, at least add a zero to its price.</string>
     <string name="missingQuantity">Where are the books?</string>
+    <string name="missingSupplier">Where is the supplier?</string>
+    <string name="missingSupplierPhone">Where is the supplier\'s Phone Number?</string>
+
+    <string name="removeConfirmed">Book Entry not removed, operation failed.</string>
+    <string name="removeFailed">Book Entry successfully removed.</string>
+
+    <string name="insertConfirmation">Book added with success.</string>
 
     <!-- Error Strings -->
 

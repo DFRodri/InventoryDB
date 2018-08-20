@@ -37,7 +37,9 @@ public class Credits extends DialogFragment {
                 Integer.toString(R.string.urlName6),
                 Integer.toString(R.string.urlName7),
                 Integer.toString(R.string.urlName8),
-                Integer.toString(R.string.urlName9)
+                Integer.toString(R.string.urlName9),
+                Integer.toString(R.string.urlName10),
+                Integer.toString(R.string.urlName11)
         };
         builder.setItems(credits, new DialogInterface.OnClickListener() {
             @Override
@@ -73,6 +75,12 @@ public class Credits extends DialogFragment {
                         break;
                     case 9:
                         link = Uri.parse(Integer.toString(R.string.url9));
+                        break;
+                    case 10:
+                        link = Uri.parse(Integer.toString(R.string.url10));
+                        break;
+                    case 11:
+                        link = Uri.parse(Integer.toString(R.string.url11));
                         break;
                 }
                 Intent openLink = new Intent(Intent.ACTION_VIEW, link);

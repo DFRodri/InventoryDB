@@ -12,7 +12,7 @@
         android:scrollbars="none"
         tools:listitem="@layout/book_list" />
 
-    <!-- Add New Book -->
+    <!-- Add New Book FAB -->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         style="@style/BaseWrapStyle"

@@ -1,17 +1,22 @@
 package com.example.android.bookdb.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
+import android.app.LoaderManager;
 import android.content.ContentUris;
-import android.support.v4.content.CursorLoader;
+import android.content.CursorLoader;
 import android.content.Intent;
-import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
@@ -41,6 +46,7 @@ public class DetailsData extends Fragment implements LoaderManager.LoaderCallbac
     LinearLayout displayData;
     private @BindView(R.id.editData)
     LinearLayout editData;
+
     private @BindView(R.id.bookTitle)
     TextView bookTitle;
     private @BindView(R.id.bookPrice)
@@ -51,6 +57,9 @@ public class DetailsData extends Fragment implements LoaderManager.LoaderCallbac
     TextView bookSupplier;
     private @BindView(R.id.bookSupplierPhone)
     TextView bookPhoneSupplier;
+
+    private @BindView(R.id.fabEdit)
+    FloatingActionButton editBookFAB;
 
     private int currentSupplierPhone;
 
@@ -70,12 +79,21 @@ public class DetailsData extends Fragment implements LoaderManager.LoaderCallbac
         LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(INVENTORY_LOADER_ID, null, this);
 
+        editBookFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO - find a way to save this data into a variable and pass it with the intent
+                Intent intent = new Intent(getActivity(), EditData.class);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
     @Override
     @NonNull
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
                 BookEntry._ID,
                 BookEntry.COLUMN_PRODUCT_NAME,
@@ -94,7 +112,7 @@ public class DetailsData extends Fragment implements LoaderManager.LoaderCallbac
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
         if (data == null || data.getCount() <= 0) {
             return;
         }
@@ -141,7 +159,45 @@ public class DetailsData extends Fragment implements LoaderManager.LoaderCallbac
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+    public void onLoaderReset(android.content.Loader<Cursor> loader) {
         bookAdapter.swapCursor(null);
+    }
+
+    //TODO - Is the following correct? Need to be tested.
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.details_options, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.deleteEntry:
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                alertDialogBuilder.setMessage(R.string.warningSingleEntry);
+                alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (currentBook != null) {
+                            getActivity().getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
+                            Toast.makeText(getActivity(), R.string.entryCleaned, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), R.string.emptyBook, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
