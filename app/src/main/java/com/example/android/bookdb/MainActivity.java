@@ -1,5 +1,6 @@
 package com.example.android.bookdb;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -21,10 +22,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CursorAdapter;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,27 +62,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private @BindView(R.id.emptyView)
     TextView emptyStateTextView;
 
-    private @BindView(R.id.insertBookTitle)
-    EditText bookEditTitle;
-    private @BindView(R.id.insertBookPrice)
-    EditText bookEditPrice;
-    private @BindView(R.id.insertBookQuantity)
-    EditText bookEditQuantity;
-    private @BindView(R.id.insertBookSupplierName)
-    EditText bookEditSupplier;
-    private @BindView(R.id.insertBookSupplierPhone)
-    EditText bookEditPhoneSupplier;
-
-    private boolean bookHasChanged = false;
-
-    private View.OnTouchListener touchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            bookHasChanged = true;
-            return false;
-        }
-    };
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,12 +88,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
-
-        bookEditTitle.setOnTouchListener(touchListener);
-        bookEditPrice.setOnTouchListener(touchListener);
-        bookEditQuantity.setOnTouchListener(touchListener);
-        bookEditSupplier.setOnTouchListener(touchListener);
-        bookEditPhoneSupplier.setOnTouchListener(touchListener);
 
     }
 
@@ -158,24 +131,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         dbHelper.close();
         super.onDestroy();
     }
-
-    /**method to add a book to our db
-    //TODO - check if this is still needed now (may be needed for quick tests)
-    private void insertBook() {
-        //call the repository in write mode
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-
-        //create a map of values
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(BookEntry.COLUMN_PRODUCT_NAME, book);
-        contentValues.put(BookEntry.COLUMN_PRICE, price);
-        contentValues.put(BookEntry.COLUMN_QUANTITY, quantity);
-        contentValues.put(BookEntry.COLUMN_SUPPLIER_NAME, supplierName);
-        contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, supplierPhone);
-
-        //add the data inserted
-        database.insert(BookEntry.TABLE_NAME, null, contentValues);
-    }**/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

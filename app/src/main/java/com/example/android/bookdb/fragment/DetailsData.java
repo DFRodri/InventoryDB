@@ -82,9 +82,13 @@ public class DetailsData extends Fragment implements LoaderManager.LoaderCallbac
         editBookFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO - find a way to save this data into a variable and pass it with the intent
                 Intent intent = new Intent(getActivity(), EditData.class);
-                startActivity(intent);
+                intent.setData(currentBook);
+                if (currentBook != null) {
+                    getActivity().startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(), R.string.emptyBook, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

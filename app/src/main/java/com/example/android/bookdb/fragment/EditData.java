@@ -1,5 +1,6 @@
 package com.example.android.bookdb.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -19,6 +20,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -27,7 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.android.bookdb.R;
-import com.example.android.bookdb.custom_class.Book;
 import com.example.android.bookdb.data.BookContract.BookEntry;
 
 import java.text.DecimalFormat;
@@ -61,6 +62,17 @@ public class EditData extends Fragment implements LoaderManager.LoaderCallbacks<
     private @BindView(R.id.fabSave)
     FloatingActionButton saveBookFAB;
 
+    private boolean bookHasChanged = false;
+
+    private View.OnTouchListener touchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            bookHasChanged = true;
+            return false;
+        }
+    };
+
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +83,8 @@ public class EditData extends Fragment implements LoaderManager.LoaderCallbacks<
         editData.setVisibility(View.VISIBLE);
         displayData.setVisibility(View.GONE);
 
+        currentBook = getActivity().getIntent().getData();
+
         if (currentBook == null) {
             getActivity().setTitle(R.string.addMenu);
             getActivity().invalidateOptionsMenu();
@@ -80,6 +94,12 @@ public class EditData extends Fragment implements LoaderManager.LoaderCallbacks<
             LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(INVENTORY_LOADER_ID, null, this);
         }
+
+        bookEditTitle.setOnTouchListener(touchListener);
+        bookEditPrice.setOnTouchListener(touchListener);
+        bookEditQuantity.setOnTouchListener(touchListener);
+        bookEditSupplier.setOnTouchListener(touchListener);
+        bookEditPhoneSupplier.setOnTouchListener(touchListener);
 
         saveBookFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +124,7 @@ public class EditData extends Fragment implements LoaderManager.LoaderCallbacks<
                 BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER
         };
 
-        return new CursorLoader(getActivity(),
+        return new CursorLoader(getContext(),
                 currentBook,
                 projection,
                 null,
@@ -176,7 +196,7 @@ public class EditData extends Fragment implements LoaderManager.LoaderCallbacks<
     }
 
     private void showDeleteConfirmationDialog() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setMessage(R.string.removeEntry);
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -197,11 +217,11 @@ public class EditData extends Fragment implements LoaderManager.LoaderCallbacks<
 
     private void deletePet() {
         if (currentBook != null) {
-            int rowsDeleted = getActivity().getContentResolver().delete(currentBook, null, null);
+            int rowsDeleted = getContext().getContentResolver().delete(currentBook, null, null);
             if (rowsDeleted == 0) {
-                Toast.makeText(getActivity(), R.string.removeFailed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.removeFailed, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getActivity(), R.string.removeConfirmed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.removeConfirmed, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -230,7 +250,7 @@ public class EditData extends Fragment implements LoaderManager.LoaderCallbacks<
                 Toast.makeText(getContext(), R.string.missingSupplierPhone, Toast.LENGTH_SHORT).show();
                 bookEditPhoneSupplier.requestFocus();
             }
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         } else {
             ContentValues contentValues = new ContentValues();
@@ -240,7 +260,7 @@ public class EditData extends Fragment implements LoaderManager.LoaderCallbacks<
             contentValues.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplier);
             contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, bookSupplierPhoneNumber);
 
-            Uri addNewBook =  getActivity().getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
+            Uri addNewBook =  getContext().getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
             getActivity().finish();
             Toast.makeText(getContext(), R.string.insertConfirmation, Toast.LENGTH_SHORT).show();
         }
