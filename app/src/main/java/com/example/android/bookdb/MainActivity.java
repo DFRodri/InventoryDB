@@ -37,13 +37,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
     //call to our db helper
     private BookDBHelper dbHelper = new BookDBHelper(this);
 
     //global variables
     Context context;
 
-    private Uri currentBook;
+    private Uri currentBook = null;
 
     private CursorAdapter bookAdapter;
 
@@ -53,13 +54,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private RecyclerView.LayoutManager bookListLayoutManager;
 
     //bind views with butterknife
-    private @BindView(R.id.bookList)
+    @BindView(R.id.bookList)
     RecyclerView bookListRecyclerView;
 
-    private @BindView(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton addBookFAB;
 
-    private @BindView(R.id.emptyView)
+    @BindView(R.id.emptyView)
     TextView emptyStateTextView;
 
     @SuppressLint("ClickableViewAccessibility")

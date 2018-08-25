@@ -42,23 +42,23 @@ public class DetailsData extends Fragment implements LoaderManager.LoaderCallbac
     private static final int INVENTORY_LOADER_ID = 0;
 
     //Bind views with Butterknife
-    private @BindView(R.id.displayData)
+    @BindView(R.id.displayData)
     LinearLayout displayData;
-    private @BindView(R.id.editData)
+    @BindView(R.id.editData)
     LinearLayout editData;
 
-    private @BindView(R.id.bookTitle)
+    @BindView(R.id.bookTitle)
     TextView bookTitle;
-    private @BindView(R.id.bookPrice)
+    @BindView(R.id.bookPrice)
     TextView bookPrice;
-    private @BindView(R.id.bookQuantity)
+    @BindView(R.id.bookQuantity)
     TextView bookQuantity;
-    private @BindView(R.id.bookSupplier)
+    @BindView(R.id.bookSupplier)
     TextView bookSupplier;
-    private @BindView(R.id.bookSupplierPhone)
+    @BindView(R.id.bookSupplierPhone)
     TextView bookPhoneSupplier;
 
-    private @BindView(R.id.fabEdit)
+    @BindView(R.id.fabEdit)
     FloatingActionButton editBookFAB;
 
     private int currentSupplierPhone;

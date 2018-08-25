@@ -43,23 +43,23 @@ public class EditData extends Fragment implements LoaderManager.LoaderCallbacks<
     private static final int INVENTORY_LOADER_ID = 0;
 
     //Bind views with Butterknife
-    private @BindView(R.id.displayData)
+    @BindView(R.id.displayData)
     LinearLayout displayData;
-    private @BindView(R.id.editData)
+    @BindView(R.id.editData)
     LinearLayout editData;
 
-    private @BindView(R.id.insertBookTitle)
+    @BindView(R.id.insertBookTitle)
     EditText bookEditTitle;
-    private @BindView(R.id.insertBookPrice)
+    @BindView(R.id.insertBookPrice)
     EditText bookEditPrice;
-    private @BindView(R.id.insertBookQuantity)
+    @BindView(R.id.insertBookQuantity)
     EditText bookEditQuantity;
-    private @BindView(R.id.insertBookSupplierName)
+    @BindView(R.id.insertBookSupplierName)
     EditText bookEditSupplier;
-    private @BindView(R.id.insertBookSupplierPhone)
+    @BindView(R.id.insertBookSupplierPhone)
     EditText bookEditPhoneSupplier;
 
-    private @BindView(R.id.fabSave)
+    @BindView(R.id.fabSave)
     FloatingActionButton saveBookFAB;
 
     private boolean bookHasChanged = false;

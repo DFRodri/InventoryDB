@@ -29,13 +29,13 @@ import static android.content.ContentValues.TAG;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
-    private @BindView(R.id.bookTitle)
+    @BindView(R.id.bookTitle)
     TextView bookTitle;
-    private @BindView(R.id.bookPrice)
+    @BindView(R.id.bookPrice)
     TextView bookPrice;
-    private @BindView(R.id.bookQuantity)
+    @BindView(R.id.bookQuantity)
     TextView bookQuantity;
-    private @BindView(R.id.bookSale)
+    @BindView(R.id.bookSale)
     TextView bookSale;
 
     private CursorAdapter cursorAdapter;
