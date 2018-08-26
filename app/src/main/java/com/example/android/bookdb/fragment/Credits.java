@@ -2,19 +2,19 @@ package com.example.android.bookdb.fragment;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.support.annotation.NonNull;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.android.bookdb.R;
 
 
-public class Credits extends DialogFragment {
+public class Credits extends AppCompatActivity {
     //to make sure that the fragment knows where we're working
     //making it this way to keep the API used as lower as possible
     Context context;
@@ -61,21 +61,6 @@ public class Credits extends DialogFragment {
                         break;
                     case 6:
                         link = Uri.parse(Integer.toString(R.string.url6));
-                        break;
-                    case 7:
-                        link = Uri.parse(Integer.toString(R.string.url7));
-                        break;
-                    case 8:
-                        link = Uri.parse(Integer.toString(R.string.url8));
-                        break;
-                    case 9:
-                        link = Uri.parse(Integer.toString(R.string.url9));
-                        break;
-                    case 10:
-                        link = Uri.parse(Integer.toString(R.string.url10));
-                        break;
-                    case 11:
-                        link = Uri.parse(Integer.toString(R.string.url11));
                         break;
                 }
                 Intent openLink = new Intent(Intent.ACTION_VIEW, link);

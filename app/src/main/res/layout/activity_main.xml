@@ -5,6 +5,10 @@
     style="@style/BaseMatchStyle"
     tools:context=".MainActivity">
 
+    <FrameLayout
+        android:id="@+id/dataFrag"
+        style="@style/BaseMatchStyle" />
+
     <!-- List Of Books -->
     <ListView
         android:id="@+id/bookList"

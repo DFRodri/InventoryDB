@@ -1,9 +1,6 @@
 package com.example.android.bookdb;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -11,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,7 +24,6 @@ import com.example.android.bookdb.adapter.BookAdapter;
 import com.example.android.bookdb.data.BookContract.BookEntry;
 import com.example.android.bookdb.data.BookDBHelper;
 import com.example.android.bookdb.fragment.Credits;
-import com.example.android.bookdb.fragment.EditData;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     LinearLayout emptyStateTextView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -69,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         addBookFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EditData.class);
+                Intent intent = new Intent(MainActivity.this, BookInfo.class);
                 startActivity(intent);
             }
         });
@@ -147,15 +144,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 alertDialog.show();
                 break;
             case R.id.credits:
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag("credits");
-                if (prev != null) {
-                    fragmentTransaction.remove(prev);
-                }
-                fragmentTransaction.addToBackStack(null);
-
-                DialogFragment creditsFragment = new Credits();
-                creditsFragment.show(fragmentTransaction, "credits");
+                Intent intent = new Intent(MainActivity.this, Credits.class);
+                startActivity(intent);
                 break;
 
         }

@@ -28,8 +28,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    //Support to Recycler View because it's a better way to display List Views
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
     //Support to Floating Action Button (and many other things but this is the main reason to use this library)
     implementation 'com.android.support:design:27.1.1'
     //ButterKnife - http://jakewharton.github.io/butterknife/
