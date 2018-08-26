@@ -46,5 +46,12 @@
         <item name="android:layout_marginLeft">@dimen/marginDisplayEditData</item>
         <item name="android:layout_marginBottom">@dimen/marginGeneral</item>
     </style>
-    
+
+    <!-- FAB Logo -->
+    <style name="WarningLogo">
+        <item name="android:layout_width">@dimen/logoSize</item>
+        <item name="android:layout_height">@dimen/logoSize</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
 </resources>

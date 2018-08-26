@@ -1,6 +1,5 @@
 package com.example.android.bookdb;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -12,19 +11,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CursorAdapter;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.android.bookdb.adapter.BookAdapter;
@@ -44,26 +39,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //global variables
     Context context;
 
-    private Uri currentBook = null;
-
-    private CursorAdapter bookAdapter;
+    private BookAdapter bookAdapter;
 
     private static final int INVENTORY_LOADER = 0;
 
-    private RecyclerView.Adapter bookListAdapter;
-    private RecyclerView.LayoutManager bookListLayoutManager;
-
     //bind views with butterknife
     @BindView(R.id.bookList)
-    RecyclerView bookListRecyclerView;
-
+    ListView bookList;
     @BindView(R.id.fab)
     FloatingActionButton addBookFAB;
-
     @BindView(R.id.emptyView)
-    TextView emptyStateTextView;
+    LinearLayout emptyStateTextView;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,16 +58,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         ButterKnife.bind(this);
 
-        bookListLayoutManager = new LinearLayoutManager(this);
-        bookListRecyclerView.setLayoutManager(bookListLayoutManager);
-
         getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
 
-        bookListRecyclerView.addItemDecoration(new DividerItemDecoration(this,
-                DividerItemDecoration.VERTICAL));
+        bookList.setEmptyView(emptyStateTextView);
 
-        bookListAdapter = new BookAdapter(this, null);
-        bookListRecyclerView.setAdapter(bookListAdapter);
+        bookAdapter = new BookAdapter(this, null, 0);
+        bookList.setAdapter(bookAdapter);
+
 
         addBookFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         };
 
         return new CursorLoader(this,
-                currentBook,
+                BookEntry.CONTENT_URI,
                 projection,
                 null,
                 null,

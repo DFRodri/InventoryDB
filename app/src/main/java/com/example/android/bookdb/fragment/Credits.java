@@ -34,12 +34,7 @@ public class Credits extends DialogFragment {
                 Integer.toString(R.string.urlName3),
                 Integer.toString(R.string.urlName4),
                 Integer.toString(R.string.urlName5),
-                Integer.toString(R.string.urlName6),
-                Integer.toString(R.string.urlName7),
-                Integer.toString(R.string.urlName8),
-                Integer.toString(R.string.urlName9),
-                Integer.toString(R.string.urlName10),
-                Integer.toString(R.string.urlName11)
+                Integer.toString(R.string.urlName6)
         };
         builder.setItems(credits, new DialogInterface.OnClickListener() {
             @Override

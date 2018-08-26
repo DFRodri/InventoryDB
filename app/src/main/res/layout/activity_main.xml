@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/BaseMatchStyle"
     tools:context=".MainActivity">
 
     <!-- List Of Books -->
-    <android.support.v7.widget.RecyclerView
+    <ListView
         android:id="@+id/bookList"
         style="@style/BaseMatchStyle"
         android:scrollbars="none"
+        android:visibility="gone"
         tools:listitem="@layout/book_list" />
 
     <!-- Add New Book FAB -->
@@ -22,12 +23,22 @@
         android:layout_margin="@dimen/marginGeneral"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
-    <!-- Error -->
-    <TextView
-        style="@style/BaseMatchStyle"
+    <!-- Error/Empty View -->
+    <LinearLayout
         android:id="@+id/emptyView"
+        style="@style/BaseWrapStyle"
         android:layout_centerInParent="true"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:visibility="gone"/>
+        android:orientation="vertical">
+
+        <ImageView
+            style="@style/WarningLogo"
+            android:background="@drawable/ic_warning_black_24dp"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            style="@style/BaseWrapStyle"
+            android:text="@string/noBookAvailable"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+    </LinearLayout>
 
 </RelativeLayout>
