@@ -69,19 +69,17 @@ public class BookAdapter extends CursorAdapter {
                 cursor.getInt(cursor.getColumnIndex(BookEntry.COLUMN_QUANTITY));
 
         final Uri currentBook = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
-        holder.bookTitle.setText(title);
-        holder.bookPrice.setText(price);
-        holder.bookQuantity.setText(quantity);
 
         holder.bookSale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, String.valueOf(quantity));
                 int newQuantity = quantity;
+                newQuantity--;
                 ContentResolver contentResolver = context.getContentResolver();
                 ContentValues contentValues = new ContentValues();
                 if (quantity > 0) {
-                    contentValues.put(BookEntry.COLUMN_QUANTITY, newQuantity--);
+                    contentValues.put(BookEntry.COLUMN_QUANTITY, newQuantity);
                     contentResolver.update(
                             currentBook,
                             contentValues,
@@ -90,10 +88,17 @@ public class BookAdapter extends CursorAdapter {
                     );
                     context.getContentResolver().notifyChange(currentBook, null);
                     Log.i(TAG, String.valueOf(newQuantity));
-                }else{
+                } else {
                     Toast.makeText(context, R.string.noStockAvailable, Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        price += context.getString(R.string.euroSymbol);
+        String currentQuantity = Integer.toString(quantity);
+
+        holder.bookTitle.setText(title);
+        holder.bookPrice.setText(price);
+        holder.bookQuantity.setText(currentQuantity);
     }
 }

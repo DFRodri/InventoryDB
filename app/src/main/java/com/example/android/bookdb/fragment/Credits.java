@@ -1,8 +1,6 @@
 package com.example.android.bookdb.fragment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.support.annotation.NonNull;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,9 +17,8 @@ public class Credits extends AppCompatActivity {
     //making it this way to keep the API used as lower as possible
     Context context;
 
-    @Override
-    @NonNull
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+    public void Banana(Bundle savedInstanceState) {
         //setup the alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.credits);
@@ -64,17 +61,15 @@ public class Credits extends AppCompatActivity {
                         break;
                 }
                 Intent openLink = new Intent(Intent.ACTION_VIEW, link);
-                if (openLink.resolveActivity(getActivity().getPackageManager()) != null) {
+                if (openLink.resolveActivity(getPackageManager()) != null) {
                     startActivity(openLink);
                 } else {
-                    Toast.makeText(getActivity(), getString(R.string.appNotFound), Toast.LENGTH_LONG).show();
+                    Toast.makeText(Credits.this, getString(R.string.appNotFound), Toast.LENGTH_LONG).show();
                 }
             }
         });
 
         AlertDialog dialog = builder.create();
         dialog.show();
-
-        return super.onCreateDialog(savedInstanceState);
     }
 }

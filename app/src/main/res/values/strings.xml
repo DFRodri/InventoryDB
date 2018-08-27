@@ -41,8 +41,10 @@
     <string name="warningRemoveAll">Are you sure you want to REMOVE EVERY SINGLE ENTRY from the database?</string>
     <string name="warningSingleEntry">Are you sure you want to REMOVE THIS SINGLE ENTRY from the database?</string>
     <string name="warningDiscardInfo">Are you sure you want to DISCARD the changes made?</string>
+    <string name="notSavedData">Current data isn\'t saved. Do you want to continue editing?</string>
     <string name="yes">Yes</string>
     <string name="no">No, cancel.</string>
+    <string name="keepEditing">No, continue.</string>
     <string name="dbCleaned">All entries were removed. Have a nice day!</string>
     <string name="entryCleaned">Entry removed. Have a nice day!</string>
 
@@ -74,7 +76,9 @@
     <string name="removeConfirmed">Book Entry not removed, operation failed.</string>
     <string name="removeFailed">Book Entry successfully removed.</string>
 
-    <string name="insertConfirmation">Book added with success.</string>
+    <string name="insertConfirmation">Book added successfully.</string>
+    <string name="bookUpdatedFailed">Book Info update failed.</string>
+    <string name="bookUpdatedSuccess">Book Info updated!</string>
 
     <!-- Error Strings -->
 

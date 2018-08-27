@@ -3,10 +3,12 @@ package com.example.android.bookdb;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -16,9 +18,6 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,7 +57,7 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
     @BindView(R.id.fabSave)
     FloatingActionButton saveBookFAB;
 
-    private boolean bookHasChanged = false;
+    private boolean bookHasChanged;
 
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
@@ -69,7 +68,7 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
     };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.data);
 
@@ -86,7 +85,7 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
         } else {
             setTitle(R.string.editMenu);
             currentBook = getIntent().getData();
-            LoaderManager loaderManager = getLoaderManager();
+            LoaderManager loaderManager = getSupportLoaderManager();
             loaderManager.initLoader(INVENTORY_LOADER_ID, null, this);
         }
 
@@ -105,9 +104,41 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        // If the pet hasn't changed, continue with handling back button press
+        if (!bookHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                };
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.notSavedData);
+        builder.setPositiveButton(R.string.yes, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keepEditing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     @Override
-    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
                 BookEntry._ID,
                 BookEntry.COLUMN_PRODUCT_NAME,
@@ -117,7 +148,7 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
                 BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER
         };
 
-        return new android.content.CursorLoader(this,
+        return new CursorLoader(this,
                 currentBook,
                 projection,
                 null,
@@ -126,7 +157,7 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data == null || data.getCount() <= 0) {
             return;
         }
@@ -159,7 +190,7 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onLoaderReset(android.content.Loader<Cursor> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {
         bookEditTitle.setText("");
         bookEditPrice.setText("");
         bookEditQuantity.setText("");
@@ -169,9 +200,10 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.details_options, menu);
         if (currentBook == null) {
-            MenuItem menuItem = menu.findItem(R.id.deleteEntry);
+            MenuItem menuItem = menu.findItem(R.id.details);
             menuItem.setVisible(false);
         }
         return true;
@@ -182,8 +214,6 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
         switch (item.getItemId()) {
             case R.id.deleteEntry:
                 showDeleteConfirmationDialog();
-                break;
-            default:
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -227,37 +257,56 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
         String bookSupplier = bookEditSupplier.getText().toString().trim();
         String bookSupplierPhoneNumber = bookEditPhoneSupplier.getText().toString().trim();
 
-        if (currentBook == null) {
-            if (TextUtils.isEmpty(bookTitle)) {
-                Toast.makeText(this, R.string.missingTitle, Toast.LENGTH_SHORT).show();
-                bookEditTitle.requestFocus();
-            } else if (TextUtils.isEmpty(bookPrice)) {
-                Toast.makeText(this, R.string.missingPrice, Toast.LENGTH_SHORT).show();
-                bookEditPrice.requestFocus();
-            } else if (TextUtils.isEmpty(bookQuantity)) {
-                Toast.makeText(this, R.string.missingQuantity, Toast.LENGTH_SHORT).show();
-                bookEditQuantity.requestFocus();
-            } else if (TextUtils.isEmpty(bookSupplier)) {
-                Toast.makeText(this, R.string.missingSupplier, Toast.LENGTH_SHORT).show();
-                bookEditSupplier.requestFocus();
-            } else if (TextUtils.isEmpty(bookSupplierPhoneNumber)) {
-                Toast.makeText(this, R.string.missingSupplierPhone, Toast.LENGTH_SHORT).show();
-                bookEditPhoneSupplier.requestFocus();
-            }
+        //TODO - arranjar maneira de double check nos valores porque de momento dá para dar bypass com erros (valores não inseridos)
+        ContentValues contentValues = new ContentValues();
+        if (TextUtils.isEmpty(bookTitle)) {
+            Toast.makeText(this, R.string.missingTitle, Toast.LENGTH_SHORT).show();
+            bookEditTitle.requestFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         } else {
-            ContentValues contentValues = new ContentValues();
             contentValues.put(BookEntry.COLUMN_PRODUCT_NAME, bookTitle);
-            contentValues.put(BookEntry.COLUMN_PRICE, bookPrice);
-            contentValues.put(BookEntry.COLUMN_QUANTITY, bookQuantity);
-            contentValues.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplier);
-            contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, bookSupplierPhoneNumber);
-
-            Uri addNewBook = getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
-            finish();
-            Toast.makeText(this, R.string.insertConfirmation, Toast.LENGTH_SHORT).show();
         }
-    }
+        if (TextUtils.isEmpty(bookPrice)) {
+            Toast.makeText(this, R.string.missingPrice, Toast.LENGTH_SHORT).show();
+            bookEditPrice.requestFocus();
+        } else {
+            contentValues.put(BookEntry.COLUMN_PRICE, bookPrice);
+        }
+        if (TextUtils.isEmpty(bookQuantity)) {
+            Toast.makeText(this, R.string.missingQuantity, Toast.LENGTH_SHORT).show();
+            bookEditQuantity.requestFocus();
+        } else {
+            contentValues.put(BookEntry.COLUMN_QUANTITY, bookQuantity);
+        }
+        if (TextUtils.isEmpty(bookSupplier)) {
+            Toast.makeText(this, R.string.missingSupplier, Toast.LENGTH_SHORT).show();
+            bookEditSupplier.requestFocus();
+        } else {
+            contentValues.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplier);
+        }
+        if (TextUtils.isEmpty(bookSupplierPhoneNumber)) {
+            Toast.makeText(this, R.string.missingSupplierPhone, Toast.LENGTH_SHORT).show();
+            bookEditPhoneSupplier.requestFocus();
+        } else {
+            contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, bookSupplierPhoneNumber);
+        }
 
+        if (currentBook == null) {
+            Uri uri = getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
+        } else {
+            int rowsAffected = getContentResolver().update(currentBook, contentValues, null, null);
+            if (rowsAffected == 0) {
+                Toast.makeText(this, getString(R.string.bookUpdatedFailed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.bookUpdatedSuccess),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        Toast.makeText(this, R.string.insertConfirmation, Toast.LENGTH_SHORT).show();
+
+        finish();
+    }
 }

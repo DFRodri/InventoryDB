@@ -1,21 +1,23 @@
 package com.example.android.bookdb;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
-import android.support.annotation.Nullable;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -49,28 +51,36 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     LinearLayout emptyStateTextView;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-
-        getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
 
         bookList.setEmptyView(emptyStateTextView);
 
         bookAdapter = new BookAdapter(this, null, 0);
         bookList.setAdapter(bookAdapter);
 
-
-        addBookFAB.setOnClickListener(new View.OnClickListener() {
+        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, BookInfo.class);
+                Uri currentBookUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
+                intent.setData(currentBookUri);
                 startActivity(intent);
             }
         });
 
+        addBookFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, BookEdit.class);
+                startActivity(intent);
+            }
+        });
+
+        getSupportLoaderManager().initLoader(INVENTORY_LOADER, null, this);
     }
 
     @Override

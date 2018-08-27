@@ -7,13 +7,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.nfc.Tag;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.bookdb.R;
-import com.example.android.bookdb.custom_class.Book;
 import com.example.android.bookdb.data.BookContract.BookEntry;
 
 public class BookProvider extends ContentProvider {
@@ -39,9 +35,8 @@ public class BookProvider extends ContentProvider {
         return true;
     }
 
-    @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         //get readable database
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         //creation of a cursor to hold the query result
@@ -81,9 +76,8 @@ public class BookProvider extends ContentProvider {
         return cursor;
     }
 
-    @Nullable
     @Override
-    public String getType(@NonNull Uri uri) {
+    public String getType(Uri uri) {
         final int match = uriMatcher.match(uri);
         switch (match) {
             case BOOKS:
@@ -91,16 +85,13 @@ public class BookProvider extends ContentProvider {
             case BOOKS_ID:
                 return BookEntry.CONTENT_ITEM_TYPE;
             default:
-                String uriUnknown = Integer.toString(R.string.unknownURI);
-                String matchCodeUnknown = Integer.toString(R.string.unknownMatchCode);
-                throw new IllegalStateException(uriUnknown + uri + matchCodeUnknown + match);
+                throw new IllegalStateException("Unknown URI" + uri + "with match" + match);
         }
     }
 
     //insert new data
-    @Nullable
     @Override
-    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+    public Uri insert(Uri uri, ContentValues values) {
         final int match = uriMatcher.match(uri);
         switch (match) {
             case BOOKS:
@@ -115,40 +106,35 @@ public class BookProvider extends ContentProvider {
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_NAME)) {
             String title = values.getAsString(BookEntry.COLUMN_PRODUCT_NAME);
             if (title == null) {
-                String nameError = Integer.toString(R.string.unknownName);
-                throw new IllegalArgumentException(nameError);
+                throw new IllegalArgumentException("Product requires a name.");
             }
         }
         //Sanity check for null quantity values to prevent undesirable results
         if (values.containsKey(BookEntry.COLUMN_QUANTITY)) {
             Integer quantity = values.getAsInteger(BookEntry.COLUMN_QUANTITY);
             if (quantity < 0) {
-                String quantityError = Integer.toString(R.string.unknownQuantity);
-                throw new IllegalArgumentException(quantityError);
+                throw new IllegalArgumentException("You can only have positive quantities.");
             }
         }
         //Sanity check for null and negatives prices
         if (values.containsKey(BookEntry.COLUMN_PRICE)) {
             Integer price = values.getAsInteger(BookEntry.COLUMN_PRICE);
             if (price != null && price < 0) {
-                String priceError = Integer.toString(R.string.unknownPrice);
-                throw new IllegalArgumentException(priceError);
+                throw new IllegalArgumentException("Every book needs to have a price.");
             }
         }
         //Sanity check for the supplier name of the book being different from a null
         if (values.containsKey(BookEntry.COLUMN_SUPPLIER_NAME)) {
             String supplier = values.getAsString(BookEntry.COLUMN_SUPPLIER_NAME);
             if (supplier == null) {
-                String supplierError = Integer.toString(R.string.unknownSupplier);
-                throw new IllegalArgumentException(supplierError);
+                throw new IllegalArgumentException("Every book needs to have a supplier.");
             }
         }
         //Sanity check for the supplier contact (phone number) of the book being different from a null
         if (values.containsKey(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER)) {
             String phone = values.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
             if (phone == null) {
-                String supplierPhoneError = Integer.toString(R.string.unknownSupplierPhone);
-                throw new IllegalArgumentException(supplierPhoneError);
+                throw new IllegalArgumentException("Every book needs to have a supplier with a contact.");
             }
         }
 
@@ -157,8 +143,7 @@ public class BookProvider extends ContentProvider {
         //insert the new product when valid
         long id = database.insert(BookEntry.TABLE_NAME, null, values);
         if (id == -1) {
-            String insertError = Integer.toString(R.string.insertDataFailed);
-            Log.e(TAG, insertError + uri);
+            Log.e(TAG, "Failed to insert new row" + uri);
             return null;
         }
         //notify the app that data changed in the URI
@@ -168,7 +153,7 @@ public class BookProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
         //calls the database in writable mode
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
@@ -195,7 +180,7 @@ public class BookProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final int match = uriMatcher.match(uri);
 
         switch (match) {
@@ -206,8 +191,7 @@ public class BookProvider extends ContentProvider {
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateBook(uri, values, selection, selectionArgs);
             default:
-                String updateFailed = Integer.toString(R.string.updateFailed);
-                throw new IllegalArgumentException(updateFailed + uri);
+                throw new IllegalArgumentException("Update Failed, uri number unknown" + uri);
         }
     }
 
@@ -216,8 +200,7 @@ public class BookProvider extends ContentProvider {
         if (values.containsKey(BookEntry.COLUMN_PRODUCT_NAME)) {
             String title = values.getAsString(BookEntry.COLUMN_PRODUCT_NAME);
             if (title == null) {
-                String nameError = Integer.toString(R.string.unknownName);
-                throw new IllegalArgumentException(nameError);
+                throw new IllegalArgumentException("Every book needs a name!");
             }
         }
         //Sanity check for null quantity values to prevent undesirable results
@@ -259,7 +242,12 @@ public class BookProvider extends ContentProvider {
         //calls the database in writable mode
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
-        int rowsUpdated = database.update(BookEntry.TABLE_NAME, values, selection, selectionArgs);
+        int rowsUpdated = database.update(
+                BookEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
+        );
 
         //notify the app that data changed in the URI
         if (rowsUpdated != 0) {

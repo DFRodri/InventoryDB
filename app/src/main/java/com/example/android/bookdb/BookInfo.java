@@ -1,17 +1,16 @@
 package com.example.android.bookdb;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
 import android.content.ContentUris;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.bookdb.data.BookContract.BookEntry;
-import com.example.android.bookdb.fragment.EditData;
 
 import java.text.DecimalFormat;
 
@@ -62,7 +60,7 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
     private int currentSupplierPhone;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.data);
 
@@ -72,7 +70,7 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
         editData.setVisibility(View.GONE);
         setTitle(R.string.detailsMenu);
 
-        LoaderManager loaderManager = getLoaderManager();
+        LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.initLoader(INVENTORY_LOADER_ID, null, this);
 
         currentBook = getIntent().getData();
@@ -91,9 +89,9 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
         });
     }
 
-    @Override
     @NonNull
-    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
                 BookEntry._ID,
                 BookEntry.COLUMN_PRODUCT_NAME,
@@ -112,8 +110,8 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
-        if (data == null || data.getCount() <= 0) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        if (data == null || data.getCount() < 1) {
             return;
         }
 
@@ -159,8 +157,7 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        bookAdapter.swapCursor(null);
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
     }
 
     @Override
@@ -183,6 +180,7 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
                         if (currentBook != null) {
                             getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
                             Toast.makeText(getApplicationContext(), R.string.entryCleaned, Toast.LENGTH_SHORT).show();
+                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.emptyBook, Toast.LENGTH_SHORT).show();
                         }
