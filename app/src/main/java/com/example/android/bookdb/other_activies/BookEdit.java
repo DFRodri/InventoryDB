@@ -9,6 +9,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -16,20 +17,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.app.AlertDialog;
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.android.bookdb.R;
 import com.example.android.bookdb.data.BookContract.BookEntry;
-
-import java.text.DecimalFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,7 +88,6 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
             invalidateOptionsMenu();
         } else {
             setTitle(R.string.editMenu);
-
             getLoaderManager().initLoader(INVENTORY_LOADER_ID, null, this);
         }
 
@@ -106,6 +100,7 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
         fabSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i("BANANA", "HELLO #1" + currentBook);
                 checkData();
 
             }
@@ -250,62 +245,73 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
                 Toast.makeText(this, R.string.removeConfirmed, Toast.LENGTH_SHORT).show();
             }
         }
+        finish();
     }
 
     private void checkData() {
-        Log.i("BANANA", "HELLO #1" + currentBook);
-
         String bookTitle = bookEditTitle.getText().toString().trim();
         String bookPrice = bookEditPrice.getText().toString().trim();
         String bookQuantity = bookEditQuantity.getText().toString().trim();
         String bookSupplier = bookEditSupplier.getText().toString().trim();
         String bookSupplierPhoneNumber = bookEditPhoneSupplier.getText().toString().trim();
 
-        ContentValues contentValues = new ContentValues();
-        /**if (currentBook == null) {
-         if (TextUtils.isEmpty(bookTitle)) {
-         Toast.makeText(this, R.string.missingTitle, Toast.LENGTH_SHORT).show();
-         bookEditTitle.requestFocus();
-         } else if (TextUtils.isEmpty(bookPrice)) {
-         Toast.makeText(this, R.string.missingPrice, Toast.LENGTH_SHORT).show();
-         bookEditPrice.requestFocus();
-         } else if (TextUtils.isEmpty(bookQuantity)) {
-         Toast.makeText(this, R.string.missingQuantity, Toast.LENGTH_SHORT).show();
-         bookEditQuantity.requestFocus();
-         } else if (TextUtils.isEmpty(bookSupplier)) {
-         Toast.makeText(this, R.string.missingSupplier, Toast.LENGTH_SHORT).show();
-         bookEditSupplier.requestFocus();
-         } else if (TextUtils.isEmpty(bookSupplierPhoneNumber)) {
-         Toast.makeText(this, R.string.missingSupplierPhone, Toast.LENGTH_SHORT).show();
-         bookEditPhoneSupplier.requestFocus();
-         }
-         } else {**/
-        contentValues.put(BookEntry.COLUMN_PRODUCT_NAME, bookTitle);
-        contentValues.put(BookEntry.COLUMN_PRICE, bookPrice);
-        contentValues.put(BookEntry.COLUMN_QUANTITY, Integer.parseInt(bookQuantity));
-        contentValues.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplier);
-        contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, bookSupplierPhoneNumber);
         if (currentBook == null) {
+            if (TextUtils.isEmpty(bookTitle)) {
+                Toast.makeText(this, R.string.missingTitle, Toast.LENGTH_SHORT).show();
+                bookEditTitle.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(bookPrice)) {
+                Toast.makeText(this, R.string.missingPrice, Toast.LENGTH_SHORT).show();
+                bookEditPrice.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(bookQuantity)) {
+                Toast.makeText(this, R.string.missingQuantity, Toast.LENGTH_SHORT).show();
+                bookEditQuantity.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(bookSupplier)) {
+                Toast.makeText(this, R.string.missingSupplier, Toast.LENGTH_SHORT).show();
+                bookEditSupplier.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(bookSupplierPhoneNumber)) {
+                Toast.makeText(this, R.string.missingSupplierPhone, Toast.LENGTH_SHORT).show();
+                bookEditPhoneSupplier.requestFocus();
+                return;
+            }
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(BookEntry.COLUMN_PRODUCT_NAME, bookTitle);
+            contentValues.put(BookEntry.COLUMN_PRICE, bookPrice);
+            contentValues.put(BookEntry.COLUMN_QUANTITY, Integer.parseInt(bookQuantity));
+            contentValues.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplier);
+            contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, bookSupplierPhoneNumber);
             uri = getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
-            Toast.makeText(this, R.string.insertConfirmation, Toast.LENGTH_SHORT).show();
             if (uri == null) {
                 Toast.makeText(this, getString(R.string.bookUpdatedFailed),
                         Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, getString(R.string.bookUpdatedSuccess),
                         Toast.LENGTH_SHORT).show();
+                finish();
             }
         } else {
-            int rowsAffected = getContentResolver().update(uri, contentValues, null, null);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(BookEntry.COLUMN_PRODUCT_NAME, bookTitle);
+            contentValues.put(BookEntry.COLUMN_PRICE, bookPrice);
+            contentValues.put(BookEntry.COLUMN_QUANTITY, Integer.parseInt(bookQuantity));
+            contentValues.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplier);
+            contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, bookSupplierPhoneNumber);
+            int rowsAffected = getContentResolver().update(currentBook, contentValues, null, null);
             if (rowsAffected == 0) {
                 Toast.makeText(this, getString(R.string.bookUpdatedFailed),
                         Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, getString(R.string.bookUpdatedSuccess),
                         Toast.LENGTH_SHORT).show();
+                finish();
             }
-            //}
-            finish();
         }
     }
 }
