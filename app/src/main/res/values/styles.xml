@@ -24,11 +24,6 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="BaseWrapAndMatchStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
     <!-- Edit/Insert Data -->
 
     <style name="InsertAndDeleteData" parent="BaseMatchAndWrapStyle">
@@ -45,6 +40,21 @@
         <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Medium</item>
         <item name="android:layout_marginLeft">@dimen/marginDisplayEditData</item>
         <item name="android:layout_marginBottom">@dimen/marginGeneral</item>
+    </style>
+
+    <style name="ItemEditQuantity" parent="BaseWrapStyle">
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Medium</item>
+        <item name="android:layout_marginRight">@dimen/marginDisplayEditData</item>
+        <item name="android:layout_marginBottom">@dimen/marginGeneral</item>
+        <item name="android:paddingLeft">@dimen/paddingGeneral</item>
+        <item name="android:paddingRight">@dimen/paddingGeneral</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="ItemEditQuantityIcons" parent="ItemEditQuantity">
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- FAB Logo -->

@@ -15,7 +15,7 @@
                 android:title="@string/removeAll"
                 app:showAsAction="always"
                 />
-            <!-- Credits -->
+            <!-- CreditsInfo -->
             <item
                 android:id="@+id/credits"
                 android:title="@string/credits"

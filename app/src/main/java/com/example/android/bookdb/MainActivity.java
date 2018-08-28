@@ -1,6 +1,7 @@
 package com.example.android.bookdb;
 
 import android.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.DialogInterface;
@@ -25,9 +26,9 @@ import android.widget.Toast;
 import com.example.android.bookdb.adapter.BookAdapter;
 import com.example.android.bookdb.data.BookContract.BookEntry;
 import com.example.android.bookdb.data.BookDBHelper;
-import com.example.android.bookdb.other_activies.Credits;
-import com.example.android.bookdb.other_activies.BookEdit;
-import com.example.android.bookdb.other_activies.BookInfo;
+import com.example.android.bookdb.other_activities.CreditsInfo;
+import com.example.android.bookdb.other_activities.BookEdit;
+import com.example.android.bookdb.other_activities.BookInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,13 +36,13 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     //call to our db helper
-    private BookDBHelper dbHelper = new BookDBHelper(this);
+    private final BookDBHelper dbHelper = new BookDBHelper(this);
 
     private BookAdapter bookAdapter;
 
     private static final int INVENTORY_LOADER = 0;
 
-    //bind views with butterknife
+    //bind views with ButterKnife
     @BindView(R.id.bookList)
     ListView bookList;
     @BindView(R.id.fab)
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     public void onClick(DialogInterface dialog, int which) {
                         int rowsDeleted = getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
                         Toast.makeText(getApplicationContext(), R.string.dbCleaned, Toast.LENGTH_SHORT).show();
-                        Log.i("Entry Removed", rowsDeleted + "rows deleted from your databse");
+                        Log.i("Entry Removed", rowsDeleted + "rows deleted from your database");
                     }
                 });
                 alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 alertDialog.show();
                 break;
             case R.id.credits:
-                Intent intent = new Intent(MainActivity.this, Credits.class);
+                Intent intent = new Intent(MainActivity.this, CreditsInfo.class);
                 startActivity(intent);
                 break;
 
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
@@ -149,12 +151,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         bookAdapter.swapCursor(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         bookAdapter.swapCursor(null);
     }
 }

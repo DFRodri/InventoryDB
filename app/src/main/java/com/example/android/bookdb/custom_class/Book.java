@@ -12,20 +12,4 @@ public class Book {
         this.bookPrice = bookPrice;
         this.bookQuantity = bookQuantity;
     }
-
-    public String getBookTitle() {
-        return bookTitle;
-    }
-
-    public String getBookPrice() {
-        return bookPrice;
-    }
-
-    public String getBookQuantity() {
-        return bookQuantity;
-    }
-
-    public void setBookQuantity(String bookQuantity) {
-        this.bookQuantity = bookQuantity;
-    }
 }

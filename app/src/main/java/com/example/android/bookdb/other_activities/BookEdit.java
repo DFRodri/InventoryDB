@@ -1,4 +1,4 @@
-package com.example.android.bookdb.other_activies;
+package com.example.android.bookdb.other_activities;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,7 +10,6 @@ import android.content.Loader;
 import android.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,7 +35,7 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
 
     private static final int INVENTORY_LOADER_ID = 0;
 
-    //Bind views with Butterknife
+    //Bind views with ButterKnife
     @BindView(R.id.displayData)
     LinearLayout displayData;
     @BindView(R.id.editData)
@@ -100,7 +99,6 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
         fabSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("BANANA", "HELLO #1" + currentBook);
                 checkData();
 
             }
@@ -289,10 +287,10 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
             contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, bookSupplierPhoneNumber);
             uri = getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
             if (uri == null) {
-                Toast.makeText(this, getString(R.string.bookUpdatedFailed),
+                Toast.makeText(this, getString(R.string.insertConfirmationFailed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, getString(R.string.bookUpdatedSuccess),
+                Toast.makeText(this, getString(R.string.insertConfirmation),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }

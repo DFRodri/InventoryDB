@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/BaseMatchAndWrapStyle">
 
+    <!-- Book Sale Button -->
     <TextView
         android:id="@+id/bookSale"
         style="@style/BaseWrapStyle"
@@ -11,6 +12,7 @@
         android:text="@string/saleTag"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
+    <!-- Book Title Text -->
     <TextView
         android:id="@+id/bookTitle"
         style="@style/BaseWrapStyle"
@@ -20,6 +22,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:text="@string/testTitle" />
 
+    <!-- Book Quantity Text -->
     <TextView
         android:id="@+id/bookQuantity"
         style="@style/BaseWrapStyle"
@@ -29,6 +32,7 @@
         android:layout_marginBottom="@dimen/marginGeneral"
         tools:text="@string/testQuantity" />
 
+    <!-- Book Price Text -->
     <TextView
         android:id="@+id/bookPrice"
         style="@style/BaseWrapStyle"

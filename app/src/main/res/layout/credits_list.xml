@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/BaseMatchStyle"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <!-- Resource Name/Reason -->
+    <TextView
+        android:id="@+id/resourceName"
+        style="@style/BaseWrapStyle"
+        android:layout_marginEnd="@dimen/marginGeneral"
+        android:layout_marginLeft="@dimen/marginGeneral"
+        android:layout_marginRight="@dimen/marginGeneral"
+        android:layout_marginStart="@dimen/marginGeneral"
+        android:layout_marginTop="@dimen/marginGeneral"
+        android:lines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="@tools:sample/lorem/random" />
+
+    <!-- Resource URL -->
+    <TextView
+        android:id="@+id/resourceURL"
+        style="@style/BaseWrapStyle"
+        android:layout_marginBottom="@dimen/marginGeneral"
+        android:layout_marginEnd="@dimen/marginGeneral"
+        android:layout_marginLeft="@dimen/marginGeneral"
+        android:layout_marginRight="@dimen/marginGeneral"
+        android:layout_marginStart="@dimen/marginGeneral"
+        android:lines="1"
+        android:textColor="@android:color/darker_gray"
+        android:textAppearance="?android:textAppearanceMedium"
+        tools:text="@tools:sample/lorem/random" />
+
+</LinearLayout>

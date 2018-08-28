@@ -54,10 +54,29 @@
             style="@style/ItemTag"
             android:text="@string/quantity" />
 
-        <TextView
-            android:id="@+id/bookQuantity"
-            style="@style/ItemEdit"
-            tools:text="@string/testQuantity2" />
+        <LinearLayout
+            style="@style/BaseMatchAndWrapStyle"
+            android:paddingEnd="@dimen/paddingGeneral"
+            android:paddingLeft="@dimen/paddingGeneral"
+            android:paddingRight="@dimen/paddingGeneral"
+            android:paddingStart="@dimen/paddingGeneral">
+
+            <TextView
+                android:id="@+id/minusQuantity"
+                style="@style/ItemEditQuantityIcons"
+                android:text="@string/minus" />
+
+            <TextView
+                android:id="@+id/bookQuantity"
+                style="@style/ItemEditQuantity"
+                tools:text="@string/testQuantity2" />
+
+            <TextView
+                android:id="@+id/plusQuantity"
+                style="@style/ItemEditQuantityIcons"
+                android:text="@string/plus" />
+
+        </LinearLayout>
 
         <TextView
             style="@style/ItemTag"

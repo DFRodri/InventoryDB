@@ -7,6 +7,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.bookdb.R;
@@ -36,7 +37,7 @@ public class BookProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         //get readable database
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         //creation of a cursor to hold the query result
@@ -77,7 +78,7 @@ public class BookProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         final int match = uriMatcher.match(uri);
         switch (match) {
             case BOOKS:
@@ -91,7 +92,7 @@ public class BookProvider extends ContentProvider {
 
     //insert new data
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final int match = uriMatcher.match(uri);
         switch (match) {
             case BOOKS:
@@ -153,7 +154,7 @@ public class BookProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         //calls the database in writable mode
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
@@ -180,7 +181,7 @@ public class BookProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final int match = uriMatcher.match(uri);
 
         switch (match) {

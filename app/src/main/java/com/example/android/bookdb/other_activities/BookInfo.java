@@ -1,6 +1,7 @@
-package com.example.android.bookdb.other_activies;
+package com.example.android.bookdb.other_activities;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.app.LoaderManager;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +28,8 @@ import com.example.android.bookdb.data.BookContract.BookEntry;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.ContentValues.TAG;
+
 public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private Uri currentBook;
@@ -35,7 +39,7 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
 
     private static final int INVENTORY_LOADER_ID = 0;
 
-    //Bind views with Butterknife
+    //Bind views with ButterKnife
     @BindView(R.id.displayData)
     LinearLayout displayData;
     @BindView(R.id.editData)
@@ -50,6 +54,11 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
     TextView bookSupplier;
     @BindView(R.id.bookSupplierPhone)
     TextView bookPhoneSupplier;
+
+    @BindView(R.id.plusQuantity)
+    TextView plusIcon;
+    @BindView(R.id.minusQuantity)
+    TextView minusIcon;
 
     @BindView(R.id.fabSave)
     FloatingActionButton fabSave;
@@ -88,6 +97,21 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
                 }
             }
         });
+
+        bookPhoneSupplier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                link = Uri.parse("tel:" + currentSupplierPhone + "\"");
+                Intent openDial = new Intent(Intent.ACTION_DIAL);
+                openDial.setData(link);
+                if (link != null) {
+                    startActivity(openDial);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.appNotFound), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
     @NonNull
@@ -112,6 +136,10 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        if (data == null || data.getCount() < 1) {
+            return;
+        }
+
         if (data.moveToFirst()) {
             int title = data.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
             int price = data.getColumnIndex(BookEntry.COLUMN_PRICE);
@@ -121,33 +149,51 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
 
             String currentBookTitle = data.getString(title);
             String currentBookPrice = data.getString(price);
-            String currentBookQuantity = data.getString(quantity);
+            final int currentBookQuantity = data.getInt(quantity);
             String currentSupplierName = data.getString(supplier);
             currentSupplierPhone = data.getString(phone);
 
             currentBookPrice += " " + getString(R.string.euroSymbol);
-            currentBookQuantity += " " + getString(R.string.availableUnities);
+            String finalBookQuantity = currentBookQuantity + " " + getString(R.string.availableUnities);
+
+            minusIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, String.valueOf(currentBookQuantity));
+                    if (currentBookQuantity > 0) {
+                        int newQuantity = currentBookQuantity;
+                        newQuantity--;
+                        update(newQuantity);
+                    } else {
+                        Toast.makeText(getApplicationContext(), R.string.noStockAvailable, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            plusIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, String.valueOf(currentBookQuantity));
+                    int newQuantity = currentBookQuantity;
+                    newQuantity++;
+                    update(newQuantity);
+                }
+            });
 
             bookTitle.setText(currentBookTitle);
             bookPrice.setText(currentBookPrice);
-            bookQuantity.setText(currentBookQuantity);
+            bookQuantity.setText(finalBookQuantity);
             bookSupplier.setText(currentSupplierName);
             bookPhoneSupplier.setText(currentSupplierPhone);
-        }
 
-        bookPhoneSupplier.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                link = Uri.parse("tel:"+currentSupplierPhone+"\"");
-                Intent openDial = new Intent(Intent.ACTION_DIAL);
-                openDial.setData(link);
-                if (link != null) {
-                    startActivity(openDial);
-                } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.appNotFound), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        }
+    }
+
+    private void update(int currentQuantity){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BookEntry.COLUMN_QUANTITY, currentQuantity);
+        getContentResolver().update(currentBook, contentValues, null, null);
+        Log.i(TAG, String.valueOf(currentQuantity));
     }
 
     @Override
