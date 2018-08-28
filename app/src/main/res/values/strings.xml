@@ -17,6 +17,8 @@
     <string name="url5">https://stackoverflow.com/questions/40425821/fragments-oncreateoptionsmenu-method-is-never-called</string>
     <string name="urlName6">Stack Overflow - Fragment Handle Back Button Press</string>
     <string name="url6">https://stackoverflow.com/questions/7992216/android-fragment-handle-back-button-press</string>
+    <string name="urlName7">Stack Overflow - Get dialer to open phone number</string>
+    <string name="url7">https://stackoverflow.com/questions/11699819/how-do-i-get-the-dialer-to-open-with-phone-number-displayed</string>
 
     <!-- Menu Options -->
     <string name="removeAll">Remove All</string>
@@ -41,10 +43,10 @@
     <string name="warningRemoveAll">Are you sure you want to REMOVE EVERY SINGLE ENTRY from the database?</string>
     <string name="warningSingleEntry">Are you sure you want to REMOVE THIS SINGLE ENTRY from the database?</string>
     <string name="warningDiscardInfo">Are you sure you want to DISCARD the changes made?</string>
-    <string name="notSavedData">Current data isn\'t saved. Do you want to continue editing?</string>
+    <string name="notSavedData">Current data isn\'t saved. Do you want to discard this info?</string>
     <string name="yes">Yes</string>
     <string name="no">No, cancel.</string>
-    <string name="keepEditing">No, continue.</string>
+    <string name="keepEditing">Continue editing.</string>
     <string name="dbCleaned">All entries were removed. Have a nice day!</string>
     <string name="entryCleaned">Entry removed. Have a nice day!</string>
 
@@ -65,6 +67,7 @@
 
     <!-- Others -->
     <string name="euroSymbol">€</string>
+    <string name="availableUnities">unities</string>
 
     <!-- Warning Toasts -->
     <string name="missingTitle">Books have titles, please add one.</string>

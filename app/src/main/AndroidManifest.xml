@@ -21,9 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BookInfo"
+        <activity android:name=".other_activies.BookInfo"
             android:parentActivityName=".MainActivity"/>
-        <activity android:name=".BookEdit"
+        <activity android:name=".other_activies.BookEdit"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".other_activies.Credits"
             android:parentActivityName=".MainActivity"/>
     </application>
 

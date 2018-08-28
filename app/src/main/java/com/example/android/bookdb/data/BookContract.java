@@ -39,7 +39,7 @@ public class BookContract {
          **/
         public static final String COLUMN_PRODUCT_NAME = "product";
         /**
-         * Type: TEXT
+         * Type: INTEGER
          **/
         public static final String COLUMN_PRICE = "price";
         /**

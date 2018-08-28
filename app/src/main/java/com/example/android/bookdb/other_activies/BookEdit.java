@@ -1,13 +1,15 @@
-package com.example.android.bookdb;
+package com.example.android.bookdb.other_activies;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +26,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.example.android.bookdb.R;
 import com.example.android.bookdb.data.BookContract.BookEntry;
 
 import java.text.DecimalFormat;
@@ -34,6 +37,7 @@ import butterknife.ButterKnife;
 public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private Uri currentBook;
+    private Uri uri;
 
     private static final int INVENTORY_LOADER_ID = 0;
 
@@ -55,7 +59,9 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
     EditText bookEditPhoneSupplier;
 
     @BindView(R.id.fabSave)
-    FloatingActionButton saveBookFAB;
+    FloatingActionButton fabSave;
+    @BindView(R.id.fabEdit)
+    FloatingActionButton fabEdit;
 
     private boolean bookHasChanged;
 
@@ -76,17 +82,19 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
 
         editData.setVisibility(View.VISIBLE);
         displayData.setVisibility(View.GONE);
+        fabSave.setVisibility(View.VISIBLE);
+        fabEdit.setVisibility(View.GONE);
 
-        currentBook = getIntent().getData();
+        Intent getBook = getIntent();
+        currentBook = getBook.getData();
 
         if (currentBook == null) {
             setTitle(R.string.addMenu);
             invalidateOptionsMenu();
         } else {
             setTitle(R.string.editMenu);
-            currentBook = getIntent().getData();
-            LoaderManager loaderManager = getSupportLoaderManager();
-            loaderManager.initLoader(INVENTORY_LOADER_ID, null, this);
+
+            getLoaderManager().initLoader(INVENTORY_LOADER_ID, null, this);
         }
 
         bookEditTitle.setOnTouchListener(touchListener);
@@ -95,10 +103,10 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
         bookEditSupplier.setOnTouchListener(touchListener);
         bookEditPhoneSupplier.setOnTouchListener(touchListener);
 
-        saveBookFAB.setOnClickListener(new View.OnClickListener() {
+        fabSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkData(currentBook);
+                checkData();
 
             }
         });
@@ -158,34 +166,28 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data == null || data.getCount() <= 0) {
+        if (data == null || data.getCount() < 1) {
             return;
         }
 
         if (data.moveToFirst()) {
-            int id = data.getColumnIndex(BookEntry._ID);
             int title = data.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
             int price = data.getColumnIndex(BookEntry.COLUMN_PRICE);
             int quantity = data.getColumnIndex(BookEntry.COLUMN_QUANTITY);
             int supplier = data.getColumnIndex(BookEntry.COLUMN_SUPPLIER_NAME);
             int phone = data.getColumnIndex(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
-            currentBook = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
 
             String currentBookTitle = data.getString(title);
-            String currentBookPrice = Double.toString(data.getDouble(price));
-            int currentBookQuantity = data.getInt(quantity);
+            String currentBookPrice = data.getString(price);
+            String currentBookQuantity = data.getString(quantity);
             String currentSupplierName = data.getString(supplier);
-            int currentSupplierPhone = data.getInt(phone);
-
-            //format phone numbers to be easier to read
-            DecimalFormat decimalFormat = new DecimalFormat("### ### ### ###");
-            String displayPhoneNumber = decimalFormat.format(currentSupplierPhone);
+            String currentSupplierPhone = data.getString(phone);
 
             bookEditTitle.setText(currentBookTitle);
             bookEditPrice.setText(currentBookPrice);
             bookEditQuantity.setText(currentBookQuantity);
             bookEditSupplier.setText(currentSupplierName);
-            bookEditPhoneSupplier.setText(displayPhoneNumber);
+            bookEditPhoneSupplier.setText(currentSupplierPhone);
         }
     }
 
@@ -214,7 +216,7 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
         switch (item.getItemId()) {
             case R.id.deleteEntry:
                 showDeleteConfirmationDialog();
-                break;
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -250,52 +252,51 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
         }
     }
 
-    private void checkData(Uri currentBook) {
+    private void checkData() {
+        Log.i("BANANA", "HELLO #1" + currentBook);
+
         String bookTitle = bookEditTitle.getText().toString().trim();
         String bookPrice = bookEditPrice.getText().toString().trim();
         String bookQuantity = bookEditQuantity.getText().toString().trim();
         String bookSupplier = bookEditSupplier.getText().toString().trim();
         String bookSupplierPhoneNumber = bookEditPhoneSupplier.getText().toString().trim();
 
-        //TODO - arranjar maneira de double check nos valores porque de momento dá para dar bypass com erros (valores não inseridos)
         ContentValues contentValues = new ContentValues();
-        if (TextUtils.isEmpty(bookTitle)) {
-            Toast.makeText(this, R.string.missingTitle, Toast.LENGTH_SHORT).show();
-            bookEditTitle.requestFocus();
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        } else {
-            contentValues.put(BookEntry.COLUMN_PRODUCT_NAME, bookTitle);
-        }
-        if (TextUtils.isEmpty(bookPrice)) {
-            Toast.makeText(this, R.string.missingPrice, Toast.LENGTH_SHORT).show();
-            bookEditPrice.requestFocus();
-        } else {
-            contentValues.put(BookEntry.COLUMN_PRICE, bookPrice);
-        }
-        if (TextUtils.isEmpty(bookQuantity)) {
-            Toast.makeText(this, R.string.missingQuantity, Toast.LENGTH_SHORT).show();
-            bookEditQuantity.requestFocus();
-        } else {
-            contentValues.put(BookEntry.COLUMN_QUANTITY, bookQuantity);
-        }
-        if (TextUtils.isEmpty(bookSupplier)) {
-            Toast.makeText(this, R.string.missingSupplier, Toast.LENGTH_SHORT).show();
-            bookEditSupplier.requestFocus();
-        } else {
-            contentValues.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplier);
-        }
-        if (TextUtils.isEmpty(bookSupplierPhoneNumber)) {
-            Toast.makeText(this, R.string.missingSupplierPhone, Toast.LENGTH_SHORT).show();
-            bookEditPhoneSupplier.requestFocus();
-        } else {
-            contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, bookSupplierPhoneNumber);
-        }
-
+        /**if (currentBook == null) {
+         if (TextUtils.isEmpty(bookTitle)) {
+         Toast.makeText(this, R.string.missingTitle, Toast.LENGTH_SHORT).show();
+         bookEditTitle.requestFocus();
+         } else if (TextUtils.isEmpty(bookPrice)) {
+         Toast.makeText(this, R.string.missingPrice, Toast.LENGTH_SHORT).show();
+         bookEditPrice.requestFocus();
+         } else if (TextUtils.isEmpty(bookQuantity)) {
+         Toast.makeText(this, R.string.missingQuantity, Toast.LENGTH_SHORT).show();
+         bookEditQuantity.requestFocus();
+         } else if (TextUtils.isEmpty(bookSupplier)) {
+         Toast.makeText(this, R.string.missingSupplier, Toast.LENGTH_SHORT).show();
+         bookEditSupplier.requestFocus();
+         } else if (TextUtils.isEmpty(bookSupplierPhoneNumber)) {
+         Toast.makeText(this, R.string.missingSupplierPhone, Toast.LENGTH_SHORT).show();
+         bookEditPhoneSupplier.requestFocus();
+         }
+         } else {**/
+        contentValues.put(BookEntry.COLUMN_PRODUCT_NAME, bookTitle);
+        contentValues.put(BookEntry.COLUMN_PRICE, bookPrice);
+        contentValues.put(BookEntry.COLUMN_QUANTITY, Integer.parseInt(bookQuantity));
+        contentValues.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplier);
+        contentValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, bookSupplierPhoneNumber);
         if (currentBook == null) {
-            Uri uri = getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
+            uri = getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
+            Toast.makeText(this, R.string.insertConfirmation, Toast.LENGTH_SHORT).show();
+            if (uri == null) {
+                Toast.makeText(this, getString(R.string.bookUpdatedFailed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.bookUpdatedSuccess),
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
-            int rowsAffected = getContentResolver().update(currentBook, contentValues, null, null);
+            int rowsAffected = getContentResolver().update(uri, contentValues, null, null);
             if (rowsAffected == 0) {
                 Toast.makeText(this, getString(R.string.bookUpdatedFailed),
                         Toast.LENGTH_SHORT).show();
@@ -303,10 +304,8 @@ public class BookEdit extends AppCompatActivity implements LoaderManager.LoaderC
                 Toast.makeText(this, getString(R.string.bookUpdatedSuccess),
                         Toast.LENGTH_SHORT).show();
             }
+            //}
+            finish();
         }
-
-        Toast.makeText(this, R.string.insertConfirmation, Toast.LENGTH_SHORT).show();
-
-        finish();
     }
 }

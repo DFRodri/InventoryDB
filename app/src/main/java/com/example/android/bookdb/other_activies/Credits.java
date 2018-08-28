@@ -1,4 +1,4 @@
-package com.example.android.bookdb.fragment;
+package com.example.android.bookdb.other_activies;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -13,6 +14,8 @@ import com.example.android.bookdb.R;
 
 
 public class Credits extends AppCompatActivity {
+
+    //TODO - completar isto como actividade
     //to make sure that the fragment knows where we're working
     //making it this way to keep the API used as lower as possible
     Context context;
@@ -31,7 +34,8 @@ public class Credits extends AppCompatActivity {
                 Integer.toString(R.string.urlName3),
                 Integer.toString(R.string.urlName4),
                 Integer.toString(R.string.urlName5),
-                Integer.toString(R.string.urlName6)
+                Integer.toString(R.string.urlName6),
+                Integer.toString(R.string.urlName7)
         };
         builder.setItems(credits, new DialogInterface.OnClickListener() {
             @Override
@@ -59,6 +63,9 @@ public class Credits extends AppCompatActivity {
                     case 6:
                         link = Uri.parse(Integer.toString(R.string.url6));
                         break;
+                    case 7:
+                        link = Uri.parse(Integer.toString(R.string.url7));
+                        break;
                 }
                 Intent openLink = new Intent(Intent.ACTION_VIEW, link);
                 if (openLink.resolveActivity(getPackageManager()) != null) {
@@ -71,5 +78,10 @@ public class Credits extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 }

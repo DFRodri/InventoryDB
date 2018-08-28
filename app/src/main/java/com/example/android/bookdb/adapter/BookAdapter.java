@@ -94,8 +94,8 @@ public class BookAdapter extends CursorAdapter {
             }
         });
 
-        price += context.getString(R.string.euroSymbol);
-        String currentQuantity = Integer.toString(quantity);
+        price += " " + context.getString(R.string.euroSymbol);
+        String currentQuantity = Integer.toString(quantity) + " " + context.getString(R.string.availableUnities);
 
         holder.bookTitle.setText(title);
         holder.bookPrice.setText(price);

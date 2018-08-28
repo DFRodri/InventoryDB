@@ -1,14 +1,13 @@
-package com.example.android.bookdb;
+package com.example.android.bookdb.other_activies;
 
 import android.app.AlertDialog;
 import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
-import android.content.ContentUris;
+import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,14 +16,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.bookdb.R;
 import com.example.android.bookdb.data.BookContract.BookEntry;
-
-import java.text.DecimalFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,9 +29,9 @@ import butterknife.ButterKnife;
 public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private Uri currentBook;
-    private Uri link = null;
+    private Uri link;
 
-    private CursorAdapter bookAdapter;//warning makes no sense
+    private String currentSupplierPhone;
 
     private static final int INVENTORY_LOADER_ID = 0;
 
@@ -54,10 +51,10 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
     @BindView(R.id.bookSupplierPhone)
     TextView bookPhoneSupplier;
 
+    @BindView(R.id.fabSave)
+    FloatingActionButton fabSave;
     @BindView(R.id.fabEdit)
-    FloatingActionButton editBookFAB;
-
-    private int currentSupplierPhone;
+    FloatingActionButton fabEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +65,18 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
 
         displayData.setVisibility(View.VISIBLE);
         editData.setVisibility(View.GONE);
+        fabSave.setVisibility(View.GONE);
+        fabEdit.setVisibility(View.VISIBLE);
         setTitle(R.string.detailsMenu);
 
-        LoaderManager loaderManager = getSupportLoaderManager();
-        loaderManager.initLoader(INVENTORY_LOADER_ID, null, this);
+        Intent getBook = getIntent();
+        currentBook = getBook.getData();
 
-        currentBook = getIntent().getData();
+        if (currentBook != null) {
+            getLoaderManager().initLoader(INVENTORY_LOADER_ID, null, this);
+        }
 
-        editBookFAB.setOnClickListener(new View.OnClickListener() {
+        fabEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BookInfo.this, BookEdit.class);
@@ -111,44 +112,37 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        if (data == null || data.getCount() < 1) {
-            return;
-        }
-
         if (data.moveToFirst()) {
-            int id = data.getColumnIndex(BookEntry._ID);
             int title = data.getColumnIndex(BookEntry.COLUMN_PRODUCT_NAME);
             int price = data.getColumnIndex(BookEntry.COLUMN_PRICE);
             int quantity = data.getColumnIndex(BookEntry.COLUMN_QUANTITY);
             int supplier = data.getColumnIndex(BookEntry.COLUMN_SUPPLIER_NAME);
             int phone = data.getColumnIndex(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
-            currentBook = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
 
             String currentBookTitle = data.getString(title);
-            String currentBookPrice = Double.toString(data.getDouble(price));
-            int currentBookQuantity = data.getInt(quantity);
+            String currentBookPrice = data.getString(price);
+            String currentBookQuantity = data.getString(quantity);
             String currentSupplierName = data.getString(supplier);
-            currentSupplierPhone = data.getInt(phone);
+            currentSupplierPhone = data.getString(phone);
 
-            //format phone numbers to be easier to read
-            DecimalFormat decimalFormat = new DecimalFormat("### ### ### ###");
-            String displayPhoneNumber = decimalFormat.format(currentSupplierPhone);
+            currentBookPrice += " " + getString(R.string.euroSymbol);
+            currentBookQuantity += " " + getString(R.string.availableUnities);
 
             bookTitle.setText(currentBookTitle);
             bookPrice.setText(currentBookPrice);
             bookQuantity.setText(currentBookQuantity);
             bookSupplier.setText(currentSupplierName);
-            bookPhoneSupplier.setText(displayPhoneNumber);
+            bookPhoneSupplier.setText(currentSupplierPhone);
         }
 
         bookPhoneSupplier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phoneNumber = Integer.toString(currentSupplierPhone);
-                link = Uri.parse(phoneNumber);
-                Intent openLink = new Intent(Intent.ACTION_VIEW, link);
-                if (openLink.resolveActivity(getPackageManager()) != null) {
-                    startActivity(openLink);
+                link = Uri.parse("tel:"+currentSupplierPhone+"\"");
+                Intent openDial = new Intent(Intent.ACTION_DIAL);
+                openDial.setData(link);
+                if (link != null) {
+                    startActivity(openDial);
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.appNotFound), Toast.LENGTH_LONG).show();
                 }
@@ -178,7 +172,7 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (currentBook != null) {
-                            getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
+                            getContentResolver().delete(currentBook, null, null);
                             Toast.makeText(getApplicationContext(), R.string.entryCleaned, Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
@@ -194,7 +188,7 @@ public class BookInfo extends AppCompatActivity implements LoaderManager.LoaderC
                 });
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
-                break;
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -3,7 +3,6 @@ package com.example.android.bookdb;
 import android.app.AlertDialog;
 import android.support.v4.app.LoaderManager;
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +12,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +25,9 @@ import android.widget.Toast;
 import com.example.android.bookdb.adapter.BookAdapter;
 import com.example.android.bookdb.data.BookContract.BookEntry;
 import com.example.android.bookdb.data.BookDBHelper;
-import com.example.android.bookdb.fragment.Credits;
+import com.example.android.bookdb.other_activies.Credits;
+import com.example.android.bookdb.other_activies.BookEdit;
+import com.example.android.bookdb.other_activies.BookInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,9 +36,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //call to our db helper
     private BookDBHelper dbHelper = new BookDBHelper(this);
-
-    //global variables
-    Context context;
 
     private BookAdapter bookAdapter;
 
@@ -84,41 +83,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            super.onBackPressed();
-            return;
-        } else {
-            getFragmentManager().popBackStack();
-        }
-        DialogInterface.OnClickListener discardButtonClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                };
-
-        showUnsavedChangesDialog(discardButtonClickListener);
-    }
-
-    private void showUnsavedChangesDialog(
-            DialogInterface.OnClickListener discardButtonClickListener) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(R.string.warningDiscardInfo);
-        alertDialogBuilder.setPositiveButton(R.string.yes, discardButtonClickListener);
-        alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
-    @Override
     protected void onDestroy() {
         dbHelper.close();
         super.onDestroy();
@@ -140,14 +104,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
-                        Toast.makeText(context, R.string.dbCleaned, Toast.LENGTH_SHORT).show();
+                        int rowsDeleted = getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
+                        Toast.makeText(getApplicationContext(), R.string.dbCleaned, Toast.LENGTH_SHORT).show();
+                        Log.i("Entry Removed", rowsDeleted + "rows deleted from your databse");
                     }
                 });
                 alertDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
                     }
                 });
                 AlertDialog alertDialog = alertDialogBuilder.create();
